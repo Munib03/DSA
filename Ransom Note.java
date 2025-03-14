@@ -3,7 +3,7 @@ public boolean canConstruct(String ransomNote, String magazine) {
     return false;
   
   int[] freq = new int[26];
-  
+
   for (var ch: magazine.toCharArray())
     freq[ch - 'a']++;
   
