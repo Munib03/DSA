@@ -1,13 +1,3 @@
-void main() {
-
-  var ransomNote = "a";
-  var magazine = "sdffdsab";
-
-  var ans = canConstruct(ransomNote, magazine);
-  System.out.println(ans);
-
-}
-
 public boolean canConstruct(String ransomNote, String magazine) {
   if (magazine.length() < ransomNote.length())
     return false;
