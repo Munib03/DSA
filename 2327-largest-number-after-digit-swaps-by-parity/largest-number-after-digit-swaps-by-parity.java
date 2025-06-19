@@ -1,33 +1,32 @@
 class Solution {
     public int largestInteger(int num) {
-        var pq1 = new PriorityQueue<Integer>(Collections.reverseOrder());
-        var pq2 = new PriorityQueue<Integer>(Collections.reverseOrder());
+        var oddPQ = new PriorityQueue<Integer>();
+        var evenPQ = new PriorityQueue<Integer>();
 
-        var sb = new StringBuilder();
-        sb.append(num);
+        var copyNum = num;
+        while (copyNum > 0) {
+            var nowNum = copyNum % 10;
 
-        for (var i = 0; i < sb.length(); i++) {
-            var me = Integer.parseInt(sb.charAt(i) + "");
-
-            if (me % 2 == 0)
-                pq1.offer(me);
-
+            if (nowNum % 2 == 0)
+                evenPQ.offer(nowNum);
             else
-                pq2.offer(me);
+                oddPQ.offer(nowNum);
+
+            copyNum /= 10;
         }
 
-        for (var i = 0; i < sb.length(); i++) {
-            var me = Integer.parseInt(sb.charAt(i) + "");
+        copyNum = num;
+        var sb = new StringBuilder();
 
-            if (me % 2 == 0) {
-                if (!pq1.isEmpty()) {
-                    sb.setCharAt(i, (pq1.remove() + "").charAt(0));
-                }
-            } else {
-                if (!pq2.isEmpty()) {
-                    sb.setCharAt(i, (pq2.remove() + "").charAt(0));
-                }
-            }
+        while (copyNum > 0) {
+            var nowNum = copyNum % 10;
+
+            if (nowNum % 2 == 0)
+                sb.insert(0, evenPQ.poll());
+            else
+                sb.insert(0, oddPQ.poll());
+
+            copyNum /= 10;
         }
 
         return Integer.parseInt(sb.toString());
