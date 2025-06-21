@@ -1,46 +1,21 @@
 class Solution {
     public int[][] kClosest(int[][] points, int k) {
-        var map = new TreeMap<Double, List<List<Integer>>>();
-
-        var x1 = 0;
-        var y1 = 0;
+        PriorityQueue<int[]> pq = new PriorityQueue<>(
+                (a, b) -> Integer.compare(
+                        b[0] * b[0] + b[1] * b[1],
+                        a[0] * a[0] + a[1] * a[1]));
 
         for (var point : points) {
-            var x2 = point[0];
-            var y2 = point[1];
+            pq.offer(point);
 
-            List<List<Integer>> ans = new ArrayList<>();
-            double diff = Math.sqrt(Math.pow(x1 - x2, 2) + Math.pow(y1 - y2, 2));
-            var list = new ArrayList<Integer>();
-
-            list.add(x2);
-            list.add(y2);
-
-            ans.add(list);
-
-            if (map.containsKey(diff))
-                map.get(diff).add(list);
-            else
-                map.put(diff, ans);
+            if (pq.size() > k)
+                pq.poll();
         }
 
         var i = 0;
         int[][] ans = new int[k][2];
-        for (List<List<Integer>> val : map.values()) {
-            for (var sth : val) {
-                int[] temp = new int[2];
-                temp[0] = sth.getFirst();
-                temp[1] = sth.get(1);
-
-                ans[i++] = temp;
-                k--;
-
-                if (k <= 0)
-                    break;
-            }
-
-            if (k <= 0)
-                break;
+        while (k-- > 0) {
+            ans[i++] = pq.poll();
         }
 
         return ans;
