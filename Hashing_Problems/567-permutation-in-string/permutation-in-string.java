@@ -12,7 +12,7 @@ class Solution {
             for (int j = 0; j < s1.length(); j++)
                 s2arr[s2.charAt(i + j) - 'a']++;
 
-            if (matches(s1arr, s2arr))
+            if (Arrays.equals(s1arr, s2arr))
                 return true;
         }
 
