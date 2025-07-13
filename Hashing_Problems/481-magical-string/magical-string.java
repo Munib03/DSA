@@ -2,36 +2,29 @@ class Solution {
     public int magicalString(int n) {
         if (n == 0)
             return 0;
-
         if (n <= 3)
             return 1;
 
-        int[] magic = new int[n];
-        magic[0] = 1;
-        magic[1] = 2;
-        magic[2] = 2;
+        var list = new ArrayList<Integer>();
+        list.add(1);
+        list.add(2);
+        list.add(2);
 
-        int countOnes = 1;
         int nextNum = 1;
         int i = 2;
-        int end = 3;
+        int oneCount = 1;
 
-        while (end < n) {
-            int repeat = magic[i];
-            i++;
-
-            for (int j = 0; j < repeat && end < n; j++) {
-                magic[end] = nextNum;
+        while (list.size() < n) {
+            int repeat = list.get(i++);
+            for (int j = 0; j < repeat && list.size() < n; j++) {
+                list.add(nextNum);
                 if (nextNum == 1) {
-                    countOnes++;
+                    oneCount++;
                 }
-                end++;
             }
-
             nextNum = (nextNum == 1) ? 2 : 1;
         }
 
-        return countOnes;
+        return oneCount;
     }
-
 }
