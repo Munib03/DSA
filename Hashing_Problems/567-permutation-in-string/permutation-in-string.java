@@ -1,28 +1,31 @@
 class Solution {
     public boolean checkInclusion(String s1, String s2) {
-        var n = s1.length();
-        var m = s2.length();
+        if (s1.length() > s2.length())
+            return false;
+        var s1map = new HashMap<Character, Integer>();
 
-        var arr = s1.toCharArray();
-        Arrays.sort(arr);
-        s1 = new String(arr);
+        for (int i = 0; i < s1.length(); i++)
+            s1map.put(s1.charAt(i), s1map.getOrDefault(s1.charAt(i), 0) + 1);
 
-        var i = 0;
-        var j = n - 1;
+        for (int i = 0; i <= s2.length() - s1.length(); i++) {
+            var s2map = new HashMap<Character, Integer>();
 
-        while (j < m) {
-            var ss = s2.substring(i, j + 1).toCharArray();
-            Arrays.sort(ss);
+            for (int j = 0; j < s1.length(); j++)
+                s2map.put(s2.charAt(i + j), s2map.getOrDefault(s2.charAt(i + j), 0) + 1);
 
-            var newString = new String(ss);
-
-            if (s1.contains(newString))
+            if (matches(s1map, s2map))
                 return true;
-
-            i++;
-            j++;
         }
 
         return false;
+    }
+
+    private boolean matches(HashMap<Character, Integer> s1map, HashMap<Character, Integer> s2map) {
+
+        for (char key : s1map.keySet())
+            if (s1map.get(key) - s2map.getOrDefault(key, -1) != 0)
+                return false;
+
+        return true;
     }
 }
