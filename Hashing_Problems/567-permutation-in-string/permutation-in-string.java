@@ -18,13 +18,4 @@ class Solution {
 
         return false;
     }
-
-    public boolean matches(int[] s1arr, int[] s2arr) {
-        for (int i = 0; i < 26; i++) {
-            if (s1arr[i] != s2arr[i])
-                return false;
-        }
-
-        return true;
-    }
 }
