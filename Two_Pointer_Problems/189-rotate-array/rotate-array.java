@@ -1,38 +1,23 @@
 class Solution {
     public void rotate(int[] nums, int k) {
-        var n = nums.length;
-        if (k == n)
+        int n = nums.length;
+        k = k % n;
+        if (k == 0)
             return;
 
-        var remRotations = 0;
-        if (k > n) {
-            remRotations = k - n;
-            k = n;
-        }
+        reverse(nums, 0, n - 1);
+        reverse(nums, 0, k - 1);
+        reverse(nums, k, n - 1);
+    }
 
-        doRotation(nums, k);
-
-        while (remRotations > 0) {
-            if (remRotations < k)
-                k = remRotations;
-
-            doRotation(nums, k);
-
-            remRotations -= k;
+    private void reverse(int[] nums, int left, int right) {
+        while (left < right) {
+            int temp = nums[left];
+            nums[left] = nums[right];
+            nums[right] = temp;
+            left++;
+            right--;
         }
     }
 
-    private void doRotation(int[] nums, int k) {
-        var n = nums.length;
-        var list = new ArrayList<Integer>();
-
-        for (var i = n - k; i < n; i++)
-            list.add(nums[i]);
-
-        for (var i = 0; i < (n - k); i++)
-            list.add(nums[i]);
-
-        for (var i = 0; i < n; i++)
-            nums[i] = list.get(i);
-    }
 }
