@@ -1,6 +1,8 @@
 class Solution {
     public void rotate(int[] nums, int k) {
         var n = nums.length;
+        if (k == n)
+            return;
 
         var remRotations = 0;
         if (k > n) {
