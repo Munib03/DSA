@@ -12,7 +12,7 @@ class Solution {
             var ou = fruits[right];
 
             map.put(ou, map.getOrDefault(ou, 0) + 1);
-            while (map.size() > 2) {
+            if (map.size() > 2) {
                 map.put(fruits[left], map.get(fruits[left]) - 1);
 
                 if (map.get(fruits[left]) == 0)
@@ -21,7 +21,9 @@ class Solution {
                 left++;
             }
 
-            max = Math.max(max, right - left + 1);
+            else
+                max = Math.max(max, right - left + 1);
+
             right++;
         }
 
