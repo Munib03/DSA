@@ -3,18 +3,24 @@ class Solution {
         var n = nums.length;
         var maxLen = 0;
 
-        for (var i = 0; i < n; i++) {
-            var numOfZeros = 0;
+        var left = 0;
+        var right = 0;
 
-            for (var j = i; j < n; j++) {
-                if (nums[j] == 0)
-                    numOfZeros++;
+        var zeroCnt = 0;
+        while (right < n) {
+            var ou = nums[right];
+            if (ou == 0)
+                zeroCnt++;
 
-                if (numOfZeros <= k)
-                    maxLen = Math.max(maxLen, j - i + 1);
-                else
-                    break;
+            while (zeroCnt > k) {
+                if (nums[left] == 0)
+                    zeroCnt--;
+
+                left++;
             }
+
+            maxLen = Math.max(maxLen, right - left + 1);
+            right++;
         }
 
         return maxLen;
