@@ -6,27 +6,24 @@ class Solution {
         var left = 0;
         var right = 0;
 
-        var flag = true;
-
         var zeroCnt = 0;
+
         while (right < n) {
             var ou = nums[right];
-            if (ou == 0 && flag)
+            if (ou == 0)
                 zeroCnt++;
 
             if (zeroCnt > k) {
-                flag = false;
                 if (nums[left] == 0)
                     zeroCnt--;
 
                 left++;
             }
 
-            else {
-                flag = true;
+            if (zeroCnt <= k)
                 maxLen = Math.max(maxLen, right - left + 1);
-                right++;
-            }
+
+            right++;
         }
 
         return maxLen;
