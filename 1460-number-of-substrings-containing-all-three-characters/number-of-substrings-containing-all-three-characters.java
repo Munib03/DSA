@@ -3,16 +3,21 @@ class Solution {
         var n = s.length();
 
         var cnt = 0;
-        int[] freqArr = new int[3];
-        Arrays.fill(freqArr, -1);
+        var aLastSeen = -1;
+        var bLastSeen = -1;
+        var cLastSeen = -1;
 
         for (var i = 0; i < n; i++) {
-            var ou = s.charAt(i);
+            var curr = s.charAt(i);
 
-            freqArr[ou - 'a'] = i;
+            switch (curr) {
+                case 'a' -> aLastSeen = i;
+                case 'b' -> bLastSeen = i;
+                case 'c' -> cLastSeen = i;
+            }
 
-            if (freqArr[0] != -1 && freqArr[1] != -1 && freqArr[2] != -1) {
-                var min = Math.min(freqArr[0], Math.min(freqArr[1], freqArr[2]));
+            if (aLastSeen != -1 && bLastSeen != -1 && cLastSeen != -1) {
+                var min = Math.min(aLastSeen, Math.min(bLastSeen, cLastSeen));
                 cnt += min + 1;
             }
         }
