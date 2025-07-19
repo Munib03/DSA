@@ -15,19 +15,18 @@ class Solution {
             freqArr[ou - 'A']++;
             maxSoFar = Math.max(maxSoFar, freqArr[ou - 'A']);
 
-            while (((right - left) + 1 - maxSoFar) > k) {
+            if (((right - left) + 1 - maxSoFar) > k) {
                 freqArr[s.charAt(left) - 'A']--;
                 maxSoFar = 0;
                 for (var val : freqArr)
                     maxSoFar = Math.max(maxSoFar, val);
-                    
+
                 left++;
             }
 
-            for (var val : freqArr)
-                maxSoFar = Math.max(maxSoFar, val);
-
-            maxLen = Math.max(maxLen, right - left + 1);
+            else 
+                maxLen = Math.max(maxLen, right - left + 1);
+    
             right++;
         }
 
