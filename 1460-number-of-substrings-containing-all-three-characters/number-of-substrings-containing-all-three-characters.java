@@ -1,25 +1,18 @@
 class Solution {
     public int numberOfSubstrings(String s) {
         var n = s.length();
-        var cnt = 0;
 
-        var lastASeen = -1;
-        var lastBSeen = -1;
-        var lastCSeen = -1;
+        var cnt = 0;
+        int[] freqArr = new int[3];
+        Arrays.fill(freqArr, -1);
 
         for (var i = 0; i < n; i++) {
-            var ch = s.charAt(i);
+            var ou = s.charAt(i);
 
-            if (ch == 'a')
-                lastASeen = i;
-            else if (ch == 'b')
-                lastBSeen = i;
-            else
-                lastCSeen = i;
+            freqArr[ou - 'a'] = i;
 
-            if (lastASeen != -1 && lastBSeen != -1 && lastCSeen != -1) {
-                var min = Math.min(lastASeen, Math.min(lastBSeen, lastCSeen));
-
+            if (freqArr[0] != -1 && freqArr[1] != -1 && freqArr[2] != -1) {
+                var min = Math.min(freqArr[0], Math.min(freqArr[1], freqArr[2]));
                 cnt += min + 1;
             }
         }
