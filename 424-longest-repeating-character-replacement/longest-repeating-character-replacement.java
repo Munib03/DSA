@@ -17,10 +17,6 @@ class Solution {
 
             if (((right - left) + 1 - maxSoFar) > k) {
                 freqArr[s.charAt(left) - 'A']--;
-                maxSoFar = 0;
-                for (var val : freqArr)
-                    maxSoFar = Math.max(maxSoFar, val);
-
                 left++;
             }
 
