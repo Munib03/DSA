@@ -3,25 +3,24 @@ class Solution {
         var n = s.length();
         var cnt = 0;
 
-        var lastASeen = -1;
-        var lastBSeen = -1;
-        var lastCSeen = -1;
+        var left = 0;
+        var right = 0;
 
-        for (var i = 0; i < n; i++) {
-            var ch = s.charAt(i);
+        int[] freq = new int[3];
 
-            if (ch == 'a')
-                lastASeen = i;
-            else if (ch == 'b')
-                lastBSeen = i;
-            else
-                lastCSeen = i;
+        while (right < n) {
+            var ou = s.charAt(right);
 
-            if (lastASeen != -1 && lastBSeen != -1 && lastCSeen != -1) {
-                var min = Math.min(lastASeen, Math.min(lastBSeen, lastCSeen));
+            freq[ou - 'a']++;
 
-                cnt += min + 1;
+            while (freq[0] > 0 && freq[1] > 0 && freq[2] > 0) {
+                cnt += n - right;
+                freq[s.charAt(left) - 'a']--;
+
+                left++;
             }
+
+            right++;
         }
 
         return cnt;
