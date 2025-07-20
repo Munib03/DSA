@@ -1,6 +1,7 @@
 class Solution {
     public int characterReplacement(String s, int k) {
         var n = s.length();
+
         var maxLen = 0;
 
         var maxSoFar = 0;
@@ -15,14 +16,12 @@ class Solution {
             freqArr[ou - 'A']++;
             maxSoFar = Math.max(maxSoFar, freqArr[ou - 'A']);
 
-            if (((right - left) + 1 - maxSoFar) > k) {
+            while (((right - left) + 1) - maxSoFar > k) {
                 freqArr[s.charAt(left) - 'A']--;
                 left++;
             }
 
-            else 
-                maxLen = Math.max(maxLen, right - left + 1);
-    
+            maxLen = Math.max(maxLen, right - left + 1);
             right++;
         }
 
