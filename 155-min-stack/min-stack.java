@@ -10,7 +10,7 @@ class MinStack {
             var pair = new Pair<>(val, val);
             stack.push(pair);
         } else {
-            var min = Math.min(val, stack.peek().getSecond());
+            var min = Math.min(val, stack.peek().second());
             var pair = new Pair<>(val, min);
 
             stack.push(pair);
@@ -22,28 +22,12 @@ class MinStack {
     }
 
     public int top() {
-        return stack.peek().getFirst();
+        return stack.peek().first();
     }
 
     public int getMin() {
-        return stack.peek().getSecond();
+        return stack.peek().second();
     }
 }
 
-public class Pair<F, S> {
-    private final F first;
-    private final S second;
-
-    public Pair(F first, S second) {
-        this.first = first;
-        this.second = second;
-    }
-
-    public F getFirst() {
-        return this.first;
-    }
-
-    public S getSecond() {
-        return this.second;
-    }
-}
+record Pair<F, S>(F first, S second) {}
