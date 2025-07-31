@@ -30,7 +30,7 @@ class MinStack {
     }
 }
 
-class Pair<F, S> {
+public class Pair<F, S> {
     private final F first;
     private final S second;
 
@@ -40,10 +40,10 @@ class Pair<F, S> {
     }
 
     public F getFirst() {
-        return first;
+        return this.first;
     }
 
     public S getSecond() {
-        return second;
+        return this.second;
     }
 }
