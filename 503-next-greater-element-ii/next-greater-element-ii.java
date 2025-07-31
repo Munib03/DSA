@@ -1,22 +1,41 @@
 class Solution {
     public int[] nextGreaterElements(int[] nums) {
         var n = nums.length;
-
         int[] ans = new int[n];
 
-        for (var i = 0; i < n; i++) {
-            var flag = false;
+        var monotonicStack = new Stack<Integer>();
 
-            for (var j = i + 1; j < i + n; j++) {
-                if (nums[j % n] > nums[i]) {
-                    ans[i] = nums[j % n];
-                    flag = true;
-                    break;
-                }
+        for (var i = n - 1; i >= 0; i--) {
+            var curr = nums[i];
+
+            if (monotonicStack.isEmpty())
+                monotonicStack.push(curr);
+            else {
+                while (!monotonicStack.isEmpty() && monotonicStack.peek() <= curr)
+                    monotonicStack.pop();
+
+                monotonicStack.push(curr);
+            }
+        }
+
+        for (var i = n - 1; i >= 0; i--) {
+            var curr = nums[i];
+
+            if (monotonicStack.isEmpty())
+                ans[i] = -1;
+
+            else {
+                while (!monotonicStack.isEmpty() && monotonicStack.peek() <= curr)
+                    monotonicStack.pop();
+
             }
 
-            if (!flag)
+            if (monotonicStack.isEmpty())
                 ans[i] = -1;
+            else
+                ans[i] = monotonicStack.peek();
+
+            monotonicStack.push(curr);
         }
 
         return ans;
