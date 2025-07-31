@@ -21,14 +21,8 @@ class Solution {
         for (var i = n - 1; i >= 0; i--) {
             var curr = nums[i];
 
-            if (monotonicStack.isEmpty())
-                ans[i] = -1;
-
-            else {
-                while (!monotonicStack.isEmpty() && monotonicStack.peek() <= curr)
-                    monotonicStack.pop();
-
-            }
+            while (!monotonicStack.isEmpty() && monotonicStack.peek() <= curr)
+                monotonicStack.pop();
 
             if (monotonicStack.isEmpty())
                 ans[i] = -1;
