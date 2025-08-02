@@ -10,8 +10,8 @@ class Solution {
                     sb.append(stack.pop());
 
                 stack.pop();
-                for (var ch1 : sb.toString().toCharArray())
-                    stack.push(ch1);
+                for (var i = 0; i < sb.length(); i++)
+                    stack.push(sb.charAt(i));
             } else
                 stack.push(ch);
         }
