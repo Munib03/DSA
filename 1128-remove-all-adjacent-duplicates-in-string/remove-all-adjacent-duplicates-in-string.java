@@ -10,9 +10,9 @@ class Solution {
         }
 
         var sb = new StringBuilder();
-        while (!stack.isEmpty())
-            sb.append(stack.pop());
+        for (var ch : stack)
+            sb.append(ch);
 
-        return sb.reverse().toString();
+        return sb.toString();
     }
 }
