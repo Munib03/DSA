@@ -3,17 +3,10 @@ class Solution {
         var stack = new Stack<Character>();
 
         for (var ch : s.toCharArray()) {
-            stack.push(ch);
-
-            if (stack.size() >= 2) {
-                var top1 = stack.pop();
-                var top2 = stack.pop();
-
-                if (top1 != top2) {
-                    stack.push(top2);
-                    stack.push(top1);
-                }
-            }
+            if (!stack.isEmpty() && stack.peek() == ch)
+                stack.pop();
+            else
+                stack.push(ch);
         }
 
         var sb = new StringBuilder();
