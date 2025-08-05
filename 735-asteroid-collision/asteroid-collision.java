@@ -1,7 +1,5 @@
 class Solution {
     public int[] asteroidCollision(int[] asteroids) {
-        var n = asteroids.length;
-
         var stack = new Stack<Integer>();
 
         for (var asteroid : asteroids) {
