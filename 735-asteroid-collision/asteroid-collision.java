@@ -4,27 +4,23 @@ class Solution {
 
         var stack = new Stack<Integer>();
 
-        var index = 0;
-        while (index < n) {
-            var num = asteroids[index];
-
-            if (num > 0)
-                stack.push(num);
+        for (var asteroid : asteroids) {
+            if (asteroid > 0)
+                stack.push(asteroid);
 
             else {
-                while (!stack.isEmpty() && stack.peek() > 0 && stack.peek() < Math.abs(num))
+                while (!stack.isEmpty() && stack.peek() > 0 && stack.peek() < Math.abs(asteroid))
                     stack.pop();
 
-                if (!stack.isEmpty() && stack.peek() == Math.abs(num))
+                if (!stack.isEmpty() && stack.peek() == Math.abs(asteroid))
                     stack.pop();
+
                 else if (stack.isEmpty() || stack.peek() < 0)
-                    stack.push(num);
+                    stack.push(asteroid);
             }
-
-            index++;
         }
 
-        index = 0;
+        var index = 0;
         int[] ans = new int[stack.size()];
         for (var num : stack)
             ans[index++] = num;
