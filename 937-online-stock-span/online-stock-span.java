@@ -1,24 +1,24 @@
 class StockSpanner {
-    List<Integer> previousDays;
+    private Stack<Pair<Integer, Integer>> stack;
+    private int indexCount;
 
     public StockSpanner() {
-        previousDays = new ArrayList<>();
+        stack = new Stack<>();
+        indexCount = -1;
     }
 
     public int next(int price) {
-        previousDays.add(price);
+        indexCount++;
 
-        var cnt = 0;
+        while (!stack.isEmpty() && price >= stack.peek().value())
+            stack.pop();
 
-        for (var i = previousDays.size() - 1; i >= 0; i--) {
-            var curr = previousDays.get(i);
+        var ans = (!stack.isEmpty()) ? indexCount - stack.peek().index() : indexCount - (-1);
+        stack.push(new Pair<>(price, indexCount));
 
-            if (curr > price)
-                break;
+        return ans;
+    }
 
-            cnt++;
-        }
-
-        return cnt;
+    record Pair<F, S>(F value, S index) {
     }
 }
