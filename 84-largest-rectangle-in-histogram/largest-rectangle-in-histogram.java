@@ -1,30 +1,30 @@
 class Solution {
     public int largestRectangleArea(int[] heights) {
-        var psi = prevSmallIndexes(heights);
-        var nsi = nextSmallIndexes(heights);
+        var pse = prevSmallerElementsIndexes(heights);
+        var nse = nextSmallerElementsIndexes(heights);
 
-        var totalAns = 0;
+        var max = 0;
         for (var i = 0; i < heights.length; i++) {
-            var left = psi[i];
-            var right = nsi[i];
+            var left = pse[i];
+            var right = nse[i];
 
-            var diff = Math.max((right - left) - 1, 0) * heights[i];
-            totalAns = Math.max(totalAns, diff);
+            var diff = ((right - left) - 1) * heights[i];
+            max = Math.max(max, diff);
         }
 
-        return totalAns;
+        return max;
     }
 
-    public int[] prevSmallIndexes(int[] nums) {
+    public int[] prevSmallerElementsIndexes(int[] nums) {
         var n = nums.length;
 
         int[] ans = new int[n];
         var monotonicStack = new Stack<Integer>();
 
         for (var i = 0; i < n; i++) {
-            var num = nums[i];
+            var currNum = nums[i];
 
-            while (!monotonicStack.isEmpty() && nums[monotonicStack.peek()] >= num)
+            while (!monotonicStack.isEmpty() && nums[monotonicStack.peek()] >= currNum)
                 monotonicStack.pop();
 
             ans[i] = (monotonicStack.isEmpty()) ? -1 : monotonicStack.peek();
@@ -34,16 +34,16 @@ class Solution {
         return ans;
     }
 
-    public int[] nextSmallIndexes(int[] nums) {
+    public int[] nextSmallerElementsIndexes(int[] nums) {
         var n = nums.length;
 
         int[] ans = new int[n];
         var monotonicStack = new Stack<Integer>();
 
         for (var i = n - 1; i >= 0; i--) {
-            var num = nums[i];
+            var currNum = nums[i];
 
-            while (!monotonicStack.isEmpty() && nums[monotonicStack.peek()] >= num)
+            while (!monotonicStack.isEmpty() && nums[monotonicStack.peek()] >= currNum)
                 monotonicStack.pop();
 
             ans[i] = (monotonicStack.isEmpty()) ? n : monotonicStack.peek();
