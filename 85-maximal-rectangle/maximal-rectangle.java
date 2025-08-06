@@ -1,27 +1,26 @@
 class Solution {
-
     public int maximalRectangle(char[][] matrix) {
-        if (matrix == null || matrix.length == 0)
-            return 0;
-
         var n = matrix.length;
         var m = matrix[0].length;
 
         int[][] prefixSumArr = new int[n][m];
 
-        for (int i = 0; i < m; i++) {
-            for (int j = 0; j < n; j++) {
-                if (matrix[j][i] == '1') {
-                    prefixSumArr[j][i] = (j == 0 ? 1 : prefixSumArr[j - 1][i] + 1);
-                } else {
-                    prefixSumArr[j][i] = 0;
-                }
+        for (var i = 0; i < m; i++) {
+            var sum = 0;
+
+            for (var j = 0; j < n; j++) {
+                if (matrix[j][i] == '0')
+                    sum = 0;
+                else
+                    sum += (matrix[j][i] - '0');
+
+                prefixSumArr[j][i] = sum;
             }
         }
 
         var max = 0;
-        for (var arr : prefixSumArr)
-            max = Math.max(max, largestRectangleArea(arr));
+        for (var nums : prefixSumArr)
+            max = Math.max(max, largestRectangleArea(nums));
 
         return max;
     }
@@ -49,7 +48,9 @@ class Solution {
         var monotonicStack = new Stack<Integer>();
 
         for (var i = 0; i < n; i++) {
-            while (!monotonicStack.isEmpty() && nums[monotonicStack.peek()] >= nums[i])
+            var currNum = nums[i];
+
+            while (!monotonicStack.isEmpty() && nums[monotonicStack.peek()] >= currNum)
                 monotonicStack.pop();
 
             ans[i] = (monotonicStack.isEmpty()) ? -1 : monotonicStack.peek();
@@ -66,7 +67,9 @@ class Solution {
         var monotonicStack = new Stack<Integer>();
 
         for (var i = n - 1; i >= 0; i--) {
-            while (!monotonicStack.isEmpty() && nums[monotonicStack.peek()] >= nums[i])
+            var currNum = nums[i];
+
+            while (!monotonicStack.isEmpty() && nums[monotonicStack.peek()] >= currNum)
                 monotonicStack.pop();
 
             ans[i] = (monotonicStack.isEmpty()) ? n : monotonicStack.peek();
