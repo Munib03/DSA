@@ -5,46 +5,38 @@ class Solution {
         if (k >= n)
             return "0";
 
-        var monotonicStack = new Stack<Integer>();
+        var stack = new Stack<Character>();
 
         var index = 0;
-        while (k > 0 && index < n) {
-            var currNum = Integer.parseInt(num.charAt(index) + "");
-
-            if (monotonicStack.isEmpty())
-                monotonicStack.push(currNum);
-
-            else {
-                while (k > 0 && !monotonicStack.isEmpty() && currNum < monotonicStack.peek()) {
-                    monotonicStack.pop();
-                    k--;
-                }
-
-                monotonicStack.push(currNum);
+        while (index < n) {
+            while (!stack.isEmpty() && k > 0 && (stack.peek() - '0') > (num.charAt(index) - '0')) {
+                stack.pop();
+                k--;
             }
 
+            stack.push(num.charAt(index));
             index++;
         }
 
-        while (index < n) {
-            monotonicStack.push(Integer.parseInt(num.charAt(index) + ""));
-            index++;
+        while (k > 0) {
+            stack.pop();
+            k--;
         }
 
-        while (k-- > 0)
-            monotonicStack.pop();
+        if (stack.isEmpty())
+            return "0";
 
-        var sb = new StringBuilder();
-        for (var sth : monotonicStack) {
-            if (sth == 0 && sb.isEmpty())
+        var res = new StringBuilder();
+        for (var sth : stack) {
+            if (res.isEmpty() && sth == '0')
                 continue;
 
-            sb.append(sth);
+            res.append(sth);
         }
 
-        if (sb.isEmpty())
-            sb.append("0");
+        if (res.isEmpty())
+            return "0";
 
-        return sb.toString();
+        return res.toString();
     }
 }
