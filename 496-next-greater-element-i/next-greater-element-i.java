@@ -18,7 +18,7 @@ class Solution {
         var n = nums.length;
 
         int[] ans = new int[n];
-        var monotonicStack = new Stack<Integer>();
+        var monotonicStack = new ArrayDeque<Integer>();
 
         for (var i = n - 1; i >= 0; i--) {
             var num = nums[i];
