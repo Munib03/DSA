@@ -1,19 +1,17 @@
 class MinStack {
-    private final Stack<Pair<Integer, Integer>> stack;
+    private Stack<Pair<Integer, Integer>> stack;
 
     public MinStack() {
         stack = new Stack<>();
     }
 
     public void push(int val) {
-        if (stack.isEmpty()) {
-            var pair = new Pair<>(val, val);
-            stack.push(pair);
-        } else {
-            var min = Math.min(val, stack.peek().second());
-            var pair = new Pair<>(val, min);
+        if (stack.isEmpty())
+            stack.push(new Pair<>(val, val));
 
-            stack.push(pair);
+        else {
+            var min = Math.min(val, stack.peek().min());
+            stack.push(new Pair<>(val, min));
         }
     }
 
@@ -22,12 +20,13 @@ class MinStack {
     }
 
     public int top() {
-        return stack.peek().first();
+        return stack.peek().value();
     }
 
     public int getMin() {
-        return stack.peek().second();
+        return stack.peek().min();
+    }
+
+    record Pair<F, S>(F value, S min) {
     }
 }
-
-record Pair<F, S>(F first, S second) {}
