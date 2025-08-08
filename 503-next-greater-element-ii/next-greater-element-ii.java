@@ -3,22 +3,29 @@ class Solution {
         var n = nums.length;
 
         int[] ans = new int[n];
+        var monotonicStack = new Stack<Integer>();
 
-        for (var i = 0; i < n; i++) {
-            var flag = false;
+        for (var i = n - 1; i >= 0; i--) {
+            var num = nums[i];
 
-            for (var j = i + 1; j < n + i; j++) {
-                var index = j % n;
+            while (!monotonicStack.isEmpty() && num >= monotonicStack.peek())
+                monotonicStack.pop();
 
-                if (nums[index] > nums[i]) {
-                    flag = true;
-                    ans[i] = nums[index];
-                    break;
-                }
-            }
+            monotonicStack.push(num);
+        }
 
-            if (!flag)
+        for (var i = n - 1; i >= 0; i--) {
+            var num = nums[i];
+
+            while (!monotonicStack.isEmpty() && num >= monotonicStack.peek())
+                monotonicStack.pop();
+
+            if (monotonicStack.isEmpty())
                 ans[i] = -1;
+            else
+                ans[i] = monotonicStack.peek();
+
+            monotonicStack.push(num);
         }
 
         return ans;
