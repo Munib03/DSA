@@ -1,4 +1,5 @@
 class Solution {
+
     public int maximalRectangle(char[][] matrix) {
         var n = matrix.length;
         var m = matrix[0].length;
@@ -26,31 +27,35 @@ class Solution {
     }
 
     public int largestRectangleArea(int[] heights) {
-        var pse = prevSmallerElementsIndexes(heights);
-        var nse = nextSmallerElementsIndexes(heights);
+        var n = heights.length;
 
         var max = 0;
-        for (var i = 0; i < heights.length; i++) {
+        var pse = previousSmallerElement(heights);
+        var nse = nextSmallerElement(heights);
+
+        for (var i = 0; i < n; i++) {
             var left = pse[i];
             var right = nse[i];
 
-            var diff = ((right - left) - 1) * heights[i];
-            max = Math.max(max, diff);
+            var window = (right - left) - 1;
+            var windowSize = window * heights[i];
+
+            max = Math.max(max, windowSize);
         }
 
         return max;
     }
 
-    public int[] prevSmallerElementsIndexes(int[] nums) {
+    public int[] previousSmallerElement(int[] nums) {
         var n = nums.length;
 
         int[] ans = new int[n];
         var monotonicStack = new Stack<Integer>();
 
         for (var i = 0; i < n; i++) {
-            var currNum = nums[i];
+            var num = nums[i];
 
-            while (!monotonicStack.isEmpty() && nums[monotonicStack.peek()] >= currNum)
+            while (!monotonicStack.isEmpty() && num <= nums[monotonicStack.peek()])
                 monotonicStack.pop();
 
             ans[i] = (monotonicStack.isEmpty()) ? -1 : monotonicStack.peek();
@@ -60,16 +65,16 @@ class Solution {
         return ans;
     }
 
-    public int[] nextSmallerElementsIndexes(int[] nums) {
+    public int[] nextSmallerElement(int[] nums) {
         var n = nums.length;
 
         int[] ans = new int[n];
         var monotonicStack = new Stack<Integer>();
 
         for (var i = n - 1; i >= 0; i--) {
-            var currNum = nums[i];
+            var num = nums[i];
 
-            while (!monotonicStack.isEmpty() && nums[monotonicStack.peek()] >= currNum)
+            while (!monotonicStack.isEmpty() && num <= nums[monotonicStack.peek()])
                 monotonicStack.pop();
 
             ans[i] = (monotonicStack.isEmpty()) ? n : monotonicStack.peek();
@@ -78,5 +83,4 @@ class Solution {
 
         return ans;
     }
-
 }
