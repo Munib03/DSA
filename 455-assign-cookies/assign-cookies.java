@@ -17,11 +17,9 @@ class Solution {
             if (cookieSize >= greedFactor) {
                 cnt++;
                 left++;
-                right++;
             }
 
-            else
-                right++;
+            right++;
         }
 
         return cnt;
