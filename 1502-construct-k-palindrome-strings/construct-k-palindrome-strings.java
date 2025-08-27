@@ -5,6 +5,9 @@ class Solution {
         if (k > n)
             return false;
 
+        else if (k > 26 || k == n)
+            return true;
+
         var map = addToMap(s);
         var oddCnt = 0;
 
