@@ -8,9 +8,13 @@ class Solution {
         var map = addToMap(s);
         var oddCnt = 0;
 
-        for (var val : map.values())
+        for (var val : map.values()) {
             if (val % 2 == 1)
                 oddCnt++;
+
+            if (oddCnt > k)
+                return false;
+        }
 
         return oddCnt <= k;
     }
