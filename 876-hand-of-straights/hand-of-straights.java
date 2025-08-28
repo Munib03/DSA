@@ -1,6 +1,7 @@
 class Solution {
     public boolean isNStraightHand(int[] hand, int groupSize) {
         var n = hand.length;
+
         if (n % groupSize != 0)
             return false;
 
@@ -27,6 +28,7 @@ class Solution {
                 }
             }
         }
+
         return true;
     }
 }
