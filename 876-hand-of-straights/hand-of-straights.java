@@ -5,26 +5,26 @@ class Solution {
         if (n % groupSize != 0)
             return false;
 
-        var count = new HashMap<Integer, Integer>();
+        var map = new HashMap<Integer, Integer>();
         for (var num : hand)
-            count.put(num, count.getOrDefault(num, 0) + 1);
+            map.put(num, map.getOrDefault(num, 0) + 1);
 
-        var minH = new PriorityQueue<>(count.keySet());
+        var minHeap = new PriorityQueue<>(map.keySet());
 
-        while (!minH.isEmpty()) {
-            var peak = minH.peek();
+        while (!minHeap.isEmpty()) {
+            var peak = minHeap.peek();
 
-            for (int i = peak; i < peak + groupSize; i++) {
-                if (!count.containsKey(i))
+            for (int i = peak; i < groupSize + peak; i++) {
+                if (!map.containsKey(i))
                     return false;
 
-                count.put(i, count.get(i) - 1);
+                map.put(i, map.get(i) - 1);
 
-                if (count.get(i) == 0) {
-                    if (i != minH.peek())
+                if (map.get(i) == 0) {
+                    if (i != minHeap.peek())
                         return false;
 
-                    minH.poll();
+                    minHeap.poll();
                 }
             }
         }
