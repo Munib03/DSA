@@ -5,7 +5,8 @@ class Solution {
         var list = new ArrayList<List<Integer>>();
 
         for (var i = 0; i < n; i++) {
-            if (i > 0 && nums[i] == nums[i - 1]) continue;
+            if (i > 0 && nums[i] == nums[i - 1])
+                continue;
             var left = i + 1;
             var right = n - 1;
 
@@ -15,8 +16,10 @@ class Solution {
                     list.add(Arrays.asList(nums[i], nums[left], nums[right]));
                     left++;
                     right--;
-                    while (left < right && nums[left] == nums[left - 1]) left++;
-                    while (left < right && nums[right] == nums[right + 1]) right--;
+                    while (left < right && nums[left] == nums[left - 1])
+                        left++;
+                    while (left < right && nums[right] == nums[right + 1])
+                        right--;
                 } else if (sum < 0) {
                     left++;
                 } else {
