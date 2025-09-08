@@ -1,32 +1,41 @@
 class Solution {
-    public List<List<Integer>> threeSum(int[] nums) {
-        Arrays.sort(nums);
-        var n = nums.length;
-        var list = new ArrayList<List<Integer>>();
+// O(n log n) time, space O(1)
+public List<List<Integer>> threeSum(int[] nums) {
+  var n = nums.length;
 
-        for (var i = 0; i < n; i++) {
-            if (i > 0 && nums[i] == nums[i - 1])
-                continue;
-            var left = i + 1;
-            var right = n - 1;
+  Arrays.sort(nums);
+  Set<List<Integer>> ans = new HashSet<>();
 
-            while (left < right) {
-                var sum = nums[i] + nums[left] + nums[right];
-                if (sum == 0) {
-                    list.add(Arrays.asList(nums[i], nums[left], nums[right]));
-                    left++;
-                    right--;
-                    while (left < right && nums[left] == nums[left - 1])
-                        left++;
-                    while (left < right && nums[right] == nums[right + 1])
-                        right--;
-                } else if (sum < 0) {
-                    left++;
-                } else {
-                    right--;
-                }
-            }
-        }
-        return list;
+  for (var i = 0; i < n; i++) {
+    var currElement = nums[i];
+
+    var left = i + 1;
+    var right = n - 1;
+
+
+    while (left < n && left < right) {
+      var leftNum = nums[left];
+      var rightNum = nums[right];
+
+      var sum = currElement + leftNum + rightNum;
+      if (sum == 0) {
+        var list = new ArrayList<Integer>();
+        list.add(currElement);
+        list.add(leftNum);
+        list.add(rightNum);
+
+        ans.add(list);
+        left++;
+        right--;
+      }
+      else if (sum < 0)
+        left++;
+
+      else
+        right--;
     }
+  }
+
+  return new ArrayList<>(ans);
+}
 }
