@@ -3,12 +3,17 @@ class Solution {
         var n = nums.length;
 
         Arrays.sort(nums);
-        Set<List<Integer>> ans = new HashSet<>();
+        List<List<Integer>> ans = new ArrayList<>();
 
         for (var i = 0; i < n; i++) {
+            if (i > 0 && nums[i] == nums[i - 1])
+                continue;
+
             var iElement = nums[i];
 
             for (var j = i + 1; j < n; j++) {
+                if (j > (i + 1) && nums[j] == nums[j - 1])
+                    continue;
 
                 var jElement = nums[j];
                 var leftIndex = j + 1;
@@ -18,7 +23,7 @@ class Solution {
                     var leftIndexNum = nums[leftIndex];
                     var rightIndexNum = nums[rightIndex];
 
-                    var sum = (long) iElement + jElement + leftIndexNum + rightIndexNum;
+                    long sum = (long) iElement + jElement + leftIndexNum + rightIndexNum;
                     if (sum == target) {
                         var list = new ArrayList<Integer>();
                         list.add(iElement);
@@ -30,6 +35,12 @@ class Solution {
 
                         leftIndex++;
                         rightIndex--;
+
+                        while (leftIndex < rightIndex && nums[leftIndex] == nums[leftIndex - 1])
+                            leftIndex++;
+
+                        while (leftIndex < rightIndex && nums[rightIndex] == nums[rightIndex + 1])
+                            rightIndex--;
                     }
 
                     else if (sum < target)
@@ -40,7 +51,6 @@ class Solution {
             }
         }
 
-        return new ArrayList<>(ans);
+        return ans;
     }
-
 }
