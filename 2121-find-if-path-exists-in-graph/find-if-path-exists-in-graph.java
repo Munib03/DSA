@@ -1,84 +1,37 @@
 class Solution {
-    class Graph {
-        private class Node {
-            private String label;
+    public boolean validPath(int n, int[][] edges, int source, int destination) {
+        if (source == destination) return true;
+        List<List<Integer>> adjList = new ArrayList<>();
 
-            private Node(String label) {
-                this.label = label;
-            }
-
-            @Override
-            public String toString() {
-                return label;
-            }
+        for (int i = 0; i < n; i++) {
+            adjList.add(new ArrayList<>());
         }
 
-        private Map<String, Node> nodes = new HashMap<>();
-        private Map<Node, List<Node>> adjacencyList = new HashMap<>();
-
-        public void addNode(String label) {
-            var node = new Node(label);
-
-            nodes.putIfAbsent(label, node);
-            adjacencyList.putIfAbsent(node, new ArrayList<>());
+        for (int[] edge : edges) {
+            adjList.get(edge[0]).add(edge[1]);
+            adjList.get(edge[1]).add(edge[0]);
         }
 
-        public void addEdge(String from, String to) {
-            var fromNode = nodes.get(from);
-            var toNode = nodes.get(to);
+        boolean[] visited = new boolean[n];
 
-            if (fromNode == null || toNode == null)
-                return;
+        Queue<Integer> queue = new ArrayDeque<>();
+        queue.offer(source);
+        visited[source] = true;
 
-            adjacencyList.get(fromNode).add(toNode);
-            adjacencyList.get(toNode).add(fromNode);
-        }
+        while (!queue.isEmpty()) {
+            int currSource = queue.poll();
 
-        public boolean dfs(int theSource, int theDestination) {
-            var source = theSource + "";
-            var destination = theDestination + "";
+            if (currSource == destination)
+                return true;
 
-            var root = nodes.get(source);
-
-            var set = new HashSet<Node>();
-            var stack = new Stack<Node>();
-
-            stack.push(root);
-
-            while (!stack.isEmpty()) {
-                var topOfStack = stack.pop();
-
-                if (set.contains(topOfStack))
-                    continue;
-
-                set.add(topOfStack);
-
-                for (var neighbor : adjacencyList.get(topOfStack)) {
-                    if (neighbor.label.equals(destination))
-                        return true;
-
-                    if (!set.contains(neighbor))
-                        stack.push(neighbor);
+            for (int neighbor : adjList.get(currSource)) {
+                if (!visited[neighbor]) {
+                    visited[neighbor] = true;
+                    queue.offer(neighbor);
                 }
             }
-
-            return false;
         }
+
+        return false;
     }
-
-    public boolean validPath(int n, int[][] edges, int source, int destination) {
-        if (n == 1)
-            return true;
-
-        var graph = new Graph();
-
-        for (var i = 0; i < n; i++)
-            graph.addNode(i + "");
-
-        for (var edge : edges)
-            graph.addEdge(edge[0] + "", edge[1] + "");
-
-        return graph.dfs(source, destination);
-    }
-
 }
