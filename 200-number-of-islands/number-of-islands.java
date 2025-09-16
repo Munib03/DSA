@@ -1,88 +1,40 @@
 class Solution {
-    class Graph {
-        private record Node(String label) {
-            @Override
-            public String toString() {
-                return label;
-            }
-        }
+    public int numIslands(char[][] grid) {
+        var rows = grid.length;
+        var cols = grid[0].length;
 
-        private final Map<String, Node> nodes = new HashMap<>();
-        private final Map<Node, List<Node>> adjacencyList = new HashMap<>();
+        if (rows == 0)
+            return 0;
 
-        public void addNode(String label) {
-            var newNode = new Node(label);
+        boolean[][] visitedNodes = new boolean[rows][cols];
+        var cnt = 0;
 
-            nodes.putIfAbsent(label, newNode);
-            adjacencyList.putIfAbsent(newNode, new ArrayList<>());
-        }
+        for (var i = 0; i < rows; i++) {
+            for (var j = 0; j < cols; j++) {
 
-        public void addEdge(String from, String to) {
-            var fromNode = nodes.get(from);
-            var toNode = nodes.get(to);
-
-            if (fromNode == null || toNode == null)
-                return;
-
-            adjacencyList.get(fromNode).add(toNode);
-        }
-
-        private Set<Node> set = new HashSet<>();
-
-        public int numberOfConnectedComp(int n) {
-            var cnt = 0;
-
-            for (var node : nodes.values()) {
-                if (!set.contains(node)) {
+                if (grid[i][j] == '1' && !visitedNodes[i][j]) {
+                    dfs(grid, i, j, visitedNodes);
                     cnt++;
-                    dfs(node);
                 }
+
             }
-
-            return cnt;
         }
 
-        private void dfs(Node root) {
-            if (root == null || set.contains(root))
-                return;
-
-            set.add(root);
-            for (var neighbor : adjacencyList.get(root))
-                if (!set.contains(neighbor))
-                    dfs(neighbor);
-
-        }
+        return cnt;
     }
 
-    public int numIslands(char[][] grid) {
-        int n = grid.length;
-        int m = grid[0].length;
+    private void dfs(char[][] grid, int row, int col, boolean[][] visited) {
+        if (row < 0 || col < 0 || row >= grid.length || col >= grid[0].length)
+            return;
 
-        Graph graph = new Graph();
+        if (visited[row][col] || grid[row][col] == '0')
+            return;
 
-        for (int i = 0; i < n; i++) {
-            for (int j = 0; j < m; j++) {
-                if (grid[i][j] == '1') {
-                    graph.addNode(i + "_" + j);
-                }
-            }
-        }
+        visited[row][col] = true;
 
-        int[][] dirs = { { 0, 1 }, { 1, 0 }, { 0, -1 }, { -1, 0 } };
-        for (int i = 0; i < n; i++) {
-            for (int j = 0; j < m; j++) {
-                if (grid[i][j] == '1') {
-                    for (var dir : dirs) {
-                        int ni = i + dir[0];
-                        int nj = j + dir[1];
-                        if (ni >= 0 && ni < n && nj >= 0 && nj < m && grid[ni][nj] == '1') {
-                            graph.addEdge(i + "_" + j, ni + "_" + nj);
-                        }
-                    }
-                }
-            }
-        }
-
-        return graph.numberOfConnectedComp(n);
+        dfs(grid, row + 1, col, visited);
+        dfs(grid, row - 1, col, visited);
+        dfs(grid, row, col + 1, visited);
+        dfs(grid, row, col - 1, visited);
     }
 }
