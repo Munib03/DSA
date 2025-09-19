@@ -1,8 +1,7 @@
 class Solution {
     public int[][] floodFill(int[][] image, int sr, int sc, int color) {
-
         var initialColor = image[sr][sc];
-        if (initialColor == color)
+        if (color == initialColor)
             return image;
 
         dfs(image, sr, sc, color, initialColor);
@@ -19,9 +18,9 @@ class Solution {
 
         image[row][col] = color;
 
-        dfs(image, row, col + 1, color, initialColor);
-        dfs(image, row, col - 1, color, initialColor);
         dfs(image, row + 1, col, color, initialColor);
         dfs(image, row - 1, col, color, initialColor);
+        dfs(image, row, col + 1, color, initialColor);
+        dfs(image, row, col - 1, color, initialColor);
     }
 }
