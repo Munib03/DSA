@@ -1,91 +1,60 @@
 class Solution {
-class Graph {
-  private class Node {
-    private final int label;
+    private final List<List<Integer>> adjacencyList = new ArrayList<>();
 
-    private Node(int label) {
-      this.label = label;
+    public List<Integer> eventualSafeNodes(int[][] graph) {
+        var n = graph.length;
+
+        for (var i = 0; i < n; i++)
+            adjacencyList.add(new ArrayList<>());
+
+        for (var i = 0; i < n; i++) {
+            for (var j = 0; j < graph[i].length; j++)
+                adjacencyList.get(i).add(graph[i][j]);
+        }
+
+        var theNotSafeStates = hasCycle(n);
+        var ansList = new ArrayList<Integer>();
+        for (var i = 0; i < n; i++)
+            if (!theNotSafeStates.contains(i))
+                ansList.add(i);
+
+        return ansList;
     }
-  }
 
-  private final Map<Integer, Node> nodes;
-  private final Map<Node, List<Node>> adjacencyList;
+    private Set<Integer> hasCycle(int n) {
+        var theNotSafeStates = new HashSet<Integer>();
+        var visiting = new HashSet<Integer>();
+        var visited = new HashSet<Integer>();
 
-  public Graph(int n) {
-    nodes = new HashMap<>(n);
-    adjacencyList = new HashMap<>(n);
-  }
+        for (var i = 0; i < n; i++) {
+            if (!visited.contains(i) && !theNotSafeStates.contains(i)) {
+                hasCycle(i, new HashSet<>(), visited, theNotSafeStates);
+            }
+        }
 
-  public void addNode(int label) {
-    var newNode = new Node(label);
-    
-    nodes.putIfAbsent(label, newNode);
-    adjacencyList.putIfAbsent(newNode, new ArrayList<>());
-  }
-
-  public void addEdge(int from, int to) {
-    var fromNode = nodes.get(from);
-    var toNode = nodes.get(to);
-    if (fromNode == null || toNode == null) 
-      return;
-    
-    adjacencyList.get(fromNode).add(toNode);
-  }
-
-  private Set<Node> hasCycle() {
-    var visited = new HashSet<Node>(nodes.size());
-    var theNerds = new HashSet<Node>(nodes.size());
-    
-    for (var currNode : nodes.values()) {
-      if (!visited.contains(currNode))
-        hasCycle(currNode, new HashSet<>(nodes.size()), visited, theNerds);
+        return theNotSafeStates;
     }
-    
-    return theNerds;
-  }
 
-  private boolean hasCycle(Node node, Set<Node> visiting, Set<Node> visited, Set<Node> areNotSafeState) {
-    visiting.add(node);
-    
-    for (var neighbor : adjacencyList.get(node)) {
-      if (visited.contains(neighbor)) 
-        continue;
-      
-      else if (visiting.contains(neighbor)) {
-        areNotSafeState.addAll(visiting);
-        return true;
-      }
-      
-      if (hasCycle(neighbor, visiting, visited, areNotSafeState)) 
-        return true;
+    private boolean hasCycle(int node, Set<Integer> visiting, Set<Integer> visited, Set<Integer> theNotSafeStates) {
+        visiting.add(node);
+
+        for (var neighbor : adjacencyList.get(node)) {
+            if (visited.contains(neighbor))
+                continue;
+
+            else if (visiting.contains(neighbor)) {
+                theNotSafeStates.addAll(visiting);
+                return true;
+            }
+
+            var res = hasCycle(neighbor, visiting, visited, theNotSafeStates);
+            if (res)
+                return true;
+        }
+
+        visiting.remove(node);
+        visited.add(node);
+
+        return false;
     }
-    
-    visiting.remove(node);
-    visited.add(node);
-    
-    return false;
-  }
-}
-
-public List<Integer> eventualSafeNodes(int[][] graph) {
-  var n = graph.length;
-  var theRealGraph = new Graph(n);
-  
-  for (var i = 0; i < n; i++) 
-    theRealGraph.addNode(i);
-  
-  for (var i = 0; i < n; i++)
-    for (var j = 0; j < graph[i].length; j++)
-      theRealGraph.addEdge(i, graph[i][j]);
-  
-  
-  var theNotSafeOnes = theRealGraph.hasCycle();
-  var list = new ArrayList<Integer>();
-  for (var i = 0; i < n; i++)
-    if (!theNotSafeOnes.contains(theRealGraph.nodes.get(i)))
-      list.add(i);
-  
-  return list;
-}
-
 }
