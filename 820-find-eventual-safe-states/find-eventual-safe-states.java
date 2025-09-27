@@ -1,60 +1,87 @@
 class Solution {
-    private final List<List<Integer>> adjacencyList = new ArrayList<>();
+    private class Graph {
+        private class Node {
+            private int label;
+
+            private Node(int label) {
+                this.label = label;
+            }
+
+            @Override
+            public String toString() {
+                return label + "";
+            }
+        }
+
+        private final Map<Integer, Node> nodes = new HashMap<>();
+        private final Map<Node, List<Node>> adjacencyList = new HashMap<>();
+
+        public void addNode(int node) {
+            var newNode = new Node(node);
+
+            nodes.putIfAbsent(node, newNode);
+            adjacencyList.putIfAbsent(newNode, new ArrayList<>());
+        }
+
+        public void addEdge(int from, int to) {
+            var fromNode = nodes.get(from);
+            var toNode = nodes.get(to);
+
+            if (fromNode == null || toNode == null)
+                return;
+
+            adjacencyList.get(fromNode).add(toNode);
+        }
+
+        public List<Integer> findEventualStates() {
+            var visiting = new HashSet<Node>();
+            var visited = new HashSet<Node>();
+
+            for (var node : nodes.values())
+                hasCycle(node, visiting, visited);
+
+            var list = new ArrayList<Integer>();
+            for (var node : nodes.values())
+                if (!visiting.contains(node))
+                    list.add(node.label);
+
+            return list;
+        }
+
+        // Inner Details of the class
+        private boolean hasCycle(Node node, Set<Node> visiting, Set<Node> visited) {
+            visiting.add(node);
+
+            for (var neighbor : adjacencyList.get(node)) {
+                if (visited.contains(neighbor))
+                    continue;
+
+                else if (visiting.contains(neighbor)) {
+                    return true;
+                }
+
+                if (hasCycle(neighbor, visiting, visited))
+                    return true;
+            }
+
+            visiting.remove(node);
+            visited.add(node);
+
+            return false;
+        }
+
+    }
 
     public List<Integer> eventualSafeNodes(int[][] graph) {
-        var n = graph.length;
+        var theGraph = new Graph();
 
-        for (var i = 0; i < n; i++)
-            adjacencyList.add(new ArrayList<>());
+        for (var i = 0; i < graph.length; i++)
+            theGraph.addNode(i);
 
-        for (var i = 0; i < n; i++) {
+        for (var i = 0; i < graph.length; i++)
             for (var j = 0; j < graph[i].length; j++)
-                adjacencyList.get(i).add(graph[i][j]);
-        }
+                theGraph.addEdge(i, graph[i][j]);
 
-        var theNotSafeStates = hasCycle(n);
-        var ansList = new ArrayList<Integer>();
-        for (var i = 0; i < n; i++)
-            if (!theNotSafeStates.contains(i))
-                ansList.add(i);
-
-        return ansList;
-    }
-
-    private Set<Integer> hasCycle(int n) {
-        var theNotSafeStates = new HashSet<Integer>();
-        var visiting = new HashSet<Integer>();
-        var visited = new HashSet<Integer>();
-
-        for (var i = 0; i < n; i++) {
-            if (!visited.contains(i) && !theNotSafeStates.contains(i)) {
-                hasCycle(i, new HashSet<>(), visited, theNotSafeStates);
-            }
-        }
-
-        return theNotSafeStates;
-    }
-
-    private boolean hasCycle(int node, Set<Integer> visiting, Set<Integer> visited, Set<Integer> theNotSafeStates) {
-        visiting.add(node);
-
-        for (var neighbor : adjacencyList.get(node)) {
-            if (visited.contains(neighbor))
-                continue;
-
-            else if (visiting.contains(neighbor)) {
-                theNotSafeStates.addAll(visiting);
-                return true;
-            }
-
-            var res = hasCycle(neighbor, visiting, visited, theNotSafeStates);
-            if (res)
-                return true;
-        }
-
-        visiting.remove(node);
-        visited.add(node);
-
-        return false;
+        return theGraph.findEventualStates();
     }
 }
