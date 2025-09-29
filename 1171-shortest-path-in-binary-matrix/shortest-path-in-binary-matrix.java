@@ -30,12 +30,11 @@ class Solution {
         map.replace(0, 0);
 
         var set = new HashSet<Integer>();
-        var pq = new PriorityQueue<Pair<Integer, Integer>>(
-                Comparator.comparingInt(ne -> ne.weight));
-        pq.offer(new Pair<>(0, 0));
+        var q = new ArrayDeque<Pair<Integer, Integer>>();
+        q.offer(new Pair<>(0, 0));
 
-        while (!pq.isEmpty()) {
-            var frontOfQueue = pq.poll().node;
+        while (!q.isEmpty()) {
+            var frontOfQueue = q.poll().node;
             set.add(frontOfQueue);
 
             for (var edge : graph.get(frontOfQueue)) {
@@ -45,7 +44,7 @@ class Solution {
                 var newDestination = map.get(frontOfQueue) + edge.weight;
                 if (newDestination < map.get(edge.node)) {
                     map.put(edge.node, newDestination);
-                    pq.offer(new Pair<>(edge.node, newDestination));
+                    q.offer(new Pair<>(edge.node, newDestination));
                 }
             }
         }
@@ -53,7 +52,7 @@ class Solution {
         if (map.get(destination).equals(Integer.MAX_VALUE))
             return -1;
 
-        return map.get(destination) + 1; 
+        return map.get(destination) + 1;
     }
 
     public int shortestPathBinaryMatrix(int[][] grid) {
@@ -61,10 +60,10 @@ class Solution {
         if (n == 1 && grid[0][0] == 1)
             return -1;
 
-
         return dij(n * n, grid, n * n - 1);
     }
 
     private record Pair<Node, Weight>(Node node, Weight weight) {
     }
+
 }
