@@ -1,5 +1,5 @@
 class Solution {
-    private List<List<Integer>> ansList = new ArrayList<>();
+    private final List<List<Integer>> ansList = new ArrayList<>();
 
     public List<List<Integer>> subsets(int[] nums) {
         rec(nums, 0, new ArrayList<>());
