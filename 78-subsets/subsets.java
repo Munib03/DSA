@@ -1,20 +1,24 @@
 class Solution {
+    private List<List<Integer>> ansList = new ArrayList<>();
+
     public List<List<Integer>> subsets(int[] nums) {
-        List<List<Integer>> result = new ArrayList<>();
+        rec(nums, 0, new ArrayList<>());
 
-        backtrack(nums, 0, new ArrayList<>(), result);
-
-        return result;
+        return ansList;
     }
 
-    private void backtrack(int[] nums, int startIndex, List<Integer> path, List<List<Integer>> result) {
-        result.add(new ArrayList<>(path));
-
-        for (var i = startIndex; i < nums.length; i++) {
-            path.add(nums[i]);
-
-            backtrack(nums, i + 1, path, result);
-            path.removeLast();
+    private void rec(int[] nums, int index, List<Integer> list) {
+        if (index >= nums.length) {
+            var temp = new ArrayList<>(list);
+            ansList.add(temp);
+            return;
         }
+
+        list.add(nums[index]);
+        rec(nums, index + 1, list);
+
+        list.remove((Integer) nums[index]);
+        rec(nums, index + 1, list);
     }
+
 }
