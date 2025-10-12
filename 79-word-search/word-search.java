@@ -5,6 +5,22 @@ class Solution {
         var n = board.length;
         var m = board[0].length;
 
+        var flag = false;;
+        for (var i=0; i < n; i++) {
+            for (var j=0; j < m; j++) {
+                if (board[i][j] == word.charAt(0)) {
+                    flag = true;
+                    break;
+                }
+            }
+
+            if (flag)
+                break;
+        }
+
+        if (!flag)
+            return false;
+
         for (var i = 0; i < n; i++) {
             for (var j = 0; j < m; j++) {
                 if (board[i][j] == word.charAt(0)) {
