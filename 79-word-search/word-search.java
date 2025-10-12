@@ -1,13 +1,12 @@
 class Solution {
-    private final List<String> ansList = new ArrayList<>();
-
     public boolean exist(char[][] board, String word) {
         var n = board.length;
         var m = board[0].length;
 
-        var flag = false;;
-        for (var i=0; i < n; i++) {
-            for (var j=0; j < m; j++) {
+        var flag = false;
+        ;
+        for (var i = 0; i < n; i++) {
+            for (var j = 0; j < m; j++) {
                 if (board[i][j] == word.charAt(0)) {
                     flag = true;
                     break;
@@ -26,9 +25,8 @@ class Solution {
                 if (board[i][j] == word.charAt(0)) {
                     dfs(board, new boolean[n][m], i, j, new StringBuilder(), word);
 
-                    for (String s : ansList)
-                        if (s.equals(word))
-                            return true;
+                    if (ansFlag)
+                        return true;
                 }
             }
         }
@@ -36,18 +34,22 @@ class Solution {
         return false;
     }
 
+    private boolean ansFlag = false;
+
     private void dfs(char[][] board, boolean[][] visited, int row, int col, StringBuilder sb, String word) {
         if (row < 0 || row >= board.length || col < 0 || col >= board[0].length || visited[row][col])
             return;
 
         sb.append(board[row][col]);
+        if (sb.toString().equals(word)) {
+            ansFlag = true;
+            return;
+        }
 
         if (!word.startsWith(sb.toString())) {
             sb.deleteCharAt(sb.length() - 1);
             return;
         }
-
-        ansList.add(sb.toString());
 
         if (sb.length() == word.length()) {
             sb.deleteCharAt(sb.length() - 1);
