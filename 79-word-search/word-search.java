@@ -29,6 +29,7 @@ class Solution {
         }
 
         ansList.add(sb.toString());
+
         visited[row][col] = true;
 
         dfs(board, visited, row + 1, col, sb, word);
