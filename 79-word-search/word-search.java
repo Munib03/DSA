@@ -51,11 +51,6 @@ class Solution {
             return;
         }
 
-        if (sb.length() == word.length()) {
-            sb.deleteCharAt(sb.length() - 1);
-            return;
-        }
-
         visited[row][col] = true;
 
         dfs(board, visited, row + 1, col, sb, word);
