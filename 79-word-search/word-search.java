@@ -23,7 +23,6 @@ class Solution {
 
         sb.append(board[row][col]);
 
-        // prune unnecessary branches
         if (!word.startsWith(sb.toString())) {
             sb.deleteCharAt(sb.length() - 1);
             return;
