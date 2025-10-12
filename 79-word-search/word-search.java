@@ -2,15 +2,16 @@ class Solution {
     private final List<String> ansList = new ArrayList<>();
 
     public boolean exist(char[][] board, String word) {
-        int n = board.length, m = board[0].length;
+        var n = board.length;
+        var m = board[0].length;
 
-        for (int i = 0; i < n; i++) {
-            for (int j = 0; j < m; j++) {
+        for (var i = 0; i < n; i++) {
+            for (var j = 0; j < m; j++) {
                 dfs(board, new boolean[n][m], i, j, new StringBuilder(), word);
             }
         }
 
-        for (String s : ansList)
+        for (var s : ansList)
             if (s.equals(word))
                 return true;
 
