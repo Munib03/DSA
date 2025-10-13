@@ -17,7 +17,7 @@ class Solution {
         list.add(nums[index]);
         rec(nums, index + 1, list);
 
-        list.remove((Integer) nums[index]);
+        list.removeLast();
         rec(nums, index + 1, list);
     }
 
