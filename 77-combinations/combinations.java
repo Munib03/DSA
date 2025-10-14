@@ -10,8 +10,6 @@ class Solution {
     private void rec(int n, int k, int index, List<Integer> list) {
         if (list.size() == k) {
             var temp = new ArrayList<>(list);
-            Collections.sort(temp);
-
             ansList.add(temp);
             return;
         }
