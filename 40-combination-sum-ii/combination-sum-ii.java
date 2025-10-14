@@ -1,29 +1,30 @@
 class Solution {
-    private final List<List<Integer>> ans = new ArrayList<>();
-
     public List<List<Integer>> combinationSum2(int[] candidates, int target) {
         Arrays.sort(candidates);
-        rec(0, target, 0, candidates, new ArrayList<>());
-        return ans;
+        backtrack(0, target, 0, candidates, new ArrayList<>());
+
+        return new ArrayList<>(ansList);
     }
 
-    private void rec(int index, int target, int sum, int[] nums, List<Integer> list) {
+    private final Set<List<Integer>> ansList = new HashSet<>();
+
+    private void backtrack(int index, int target, int sum, int[] nums, List<Integer> list) {
         if (sum == target) {
-            ans.add(new ArrayList<>(list));
+            ansList.add(new ArrayList<>(list));
             return;
         }
 
-        if (index >= nums.length || sum > target)
+        else if (index >= nums.length || sum > target)
             return;
 
         list.add(nums[index]);
-        rec(index + 1, target, sum + nums[index], nums, list);
+        backtrack(index + 1, target, sum + nums[index], nums, list);
+
         list.removeLast();
+        var nextIndex = index + 1;
+        while (nextIndex < nums.length && nums[nextIndex] == nums[index])
+            nextIndex++;
 
-        int next = index + 1;
-        while (next < nums.length && nums[next] == nums[index])
-            next++;
-
-        rec(next, target, sum, nums, list);
+        backtrack(nextIndex, target, sum, nums, list);
     }
 }
