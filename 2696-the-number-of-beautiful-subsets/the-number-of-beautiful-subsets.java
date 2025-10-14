@@ -1,50 +1,40 @@
 class Solution {
     public int beautifulSubsets(int[] nums, int k) {
-        rec(0, nums, new ArrayList<>());
-        var cnt = 0;
-
-        for (var list : ansList) {
-            var flag = false;
-
-            for (var i = 0; i < list.size(); i++) {
-                var me = list.get(i);
-
-                for (var j = 0; j < list.size(); j++) {
-                    var ou = list.get(j);
-
-                    var diff = Math.abs(me - ou);
-                    if (diff == k) {
-                        flag = true;
-                        break;
-                    }
-                }
-
-                if (flag)
-                    break;
-            }
-
-            if (!flag)
-                cnt++;
-
-        }
+        rec(0, nums, new ArrayList<>(), k);
 
         return cnt;
     }
 
-    private final List<List<Integer>> ansList = new ArrayList<>();
+    private int cnt = 0;
 
-    private void rec(int index, int[] nums, List<Integer> list) {
+    private void rec(int index, int[] nums, List<Integer> list, int k) {
         if (index >= nums.length) {
-            if (!list.isEmpty())
-                ansList.add(new ArrayList<>(list));
+            if (!list.isEmpty()) {
+                var flag = false;
+
+                for (int i = 0; i < list.size(); i++) {
+                    for (int j = i + 1; j < list.size(); j++) {
+                        if (Math.abs(list.get(i) - list.get(j)) == k) {
+                            flag = true;
+                            break;
+                        }
+                    }
+
+                    if (flag)
+                        break;
+                }
+
+                if (!flag)
+                    cnt++;
+            }
 
             return;
         }
 
         list.add(nums[index]);
-        rec(index + 1, nums, list);
+        rec(index + 1, nums, list, k);
 
         list.removeLast();
-        rec(index + 1, nums, list);
+        rec(index + 1, nums, list, k);
     }
 }
