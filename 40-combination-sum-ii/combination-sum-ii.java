@@ -3,10 +3,10 @@ class Solution {
         Arrays.sort(candidates);
         backtrack(0, target, 0, candidates, new ArrayList<>());
 
-        return new ArrayList<>(ansList);
+        return ansList;
     }
 
-    private final Set<List<Integer>> ansList = new HashSet<>();
+    private final List<List<Integer>> ansList = new ArrayList<>();
 
     private void backtrack(int index, int target, int sum, int[] nums, List<Integer> list) {
         if (sum == target) {
