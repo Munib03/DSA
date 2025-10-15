@@ -13,10 +13,8 @@ private void backtrack(int index, String s, List<String> list) {
   }
 
   for (var i=index; i < s.length(); i++) {
-    var str = s.substring(index, i + 1);
-
-    if (isPalindrome(str)) {
-      list.add(str);
+    if (isPalindrome(s, index, i)) {
+      list.add(s.substring(index, i+1));
       backtrack(i + 1, s, list);
 
       list.removeLast();
@@ -24,12 +22,15 @@ private void backtrack(int index, String s, List<String> list) {
   }
 }
 
-private boolean isPalindrome(String s) {
-  var sb = new StringBuilder();
+private boolean isPalindrome(String s, int start, int end) {
+  while (start <= end) {
+    if (s.charAt(start) != s.charAt(end))
+      return false;
 
-  sb.append(s);
-  sb.reverse();
+    start++;
+    end--;
+  }
 
-  return sb.toString().equals(s);
+  return true;
 }
 }
