@@ -4,14 +4,15 @@ class Solution {
 
         for (var ch : s.toCharArray()) {
             switch (ch) {
-                case '(', '{', '[' -> stack.push(ch);
-
+                case '[', '(', '{' -> stack.push(ch);
                 default -> {
                     if (stack.isEmpty())
                         return false;
 
-                    var top = stack.pop();
-                    if ((top == '(' && ch != ')') || (top == '{' && ch != '}') || (top == '[' && ch != ']'))
+                    var topOfStack = stack.pop();
+
+                    if ((topOfStack == '[' && ch != ']') || (topOfStack == '(' && ch != ')')
+                            || (topOfStack == '{' && ch != '}'))
                         return false;
                 }
             }
