@@ -1,42 +1,36 @@
 class Solution {
     public String removeKdigits(String num, int k) {
         var n = num.length();
-
         if (k >= n)
             return "0";
 
         var stack = new Stack<Character>();
 
-        var index = 0;
-        while (index < n) {
-            while (!stack.isEmpty() && k > 0 && (stack.peek() - '0') > (num.charAt(index) - '0')) {
+        for (var i = 0; i < n; i++) {
+            var currChar = num.charAt(i);
+
+            while (k > 0 && !stack.isEmpty() && currChar < stack.peek()) {
                 stack.pop();
                 k--;
             }
 
-            stack.push(num.charAt(index));
-            index++;
+            stack.push(currChar);
         }
 
-        while (k > 0) {
+        while (k-- > 0)
             stack.pop();
-            k--;
-        }
 
-        if (stack.isEmpty())
-            return "0";
-
-        var res = new StringBuilder();
-        for (var sth : stack) {
-            if (res.isEmpty() && sth == '0')
+        var sb = new StringBuilder();
+        for (Character character : stack) {
+            if (character == '0' && sb.isEmpty())
                 continue;
 
-            res.append(sth);
+            sb.append(character);
         }
 
-        if (res.isEmpty())
+        if (sb.isEmpty())
             return "0";
 
-        return res.toString();
+        return sb.toString();
     }
 }
