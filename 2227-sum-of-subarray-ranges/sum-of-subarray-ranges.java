@@ -9,8 +9,8 @@ class Solution {
     public long sumSubarrayMins(int[] arr) {
         var n = arr.length;
 
-        var pse = previousSmallerElementIndexes(arr);
-        var nse = nextSmallerElementIndexes(arr);
+        var pse = previousSmallerElement(arr);
+        var nse = nextSmallerElement(arr);
 
         var sum = 0L;
 
@@ -29,7 +29,7 @@ class Solution {
         var n = arr.length;
 
         var pse = previousGreaterElement(arr);
-        var nse = nextGreaterElementIndexes(arr);
+        var nse = nextGreaterElement(arr);
 
         var sum = 0L;
 
@@ -44,80 +44,80 @@ class Solution {
         return sum;
     }
 
-    public int[] nextGreaterElementIndexes(int[] nums) {
+    private int[] nextGreaterElement(int[] nums) {
         var n = nums.length;
 
         int[] ans = new int[n];
-        var monotonicStack = new Stack<Integer>();
+        var stack = new Stack<Integer>();
 
         for (var i = n - 1; i >= 0; i--) {
-            var num = nums[i];
+            var currNum = nums[i];
 
-            // [1, 2, 3, 2, 5]
-            while (!monotonicStack.isEmpty() && num > nums[monotonicStack.peek()])
-                monotonicStack.pop();
+            while (!stack.isEmpty() && currNum > nums[stack.peek()])
+                stack.pop();
 
-            ans[i] = (monotonicStack.isEmpty()) ? n : monotonicStack.peek();
-            monotonicStack.push(i);
+            ans[i] = stack.isEmpty() ? n : stack.peek();
+            stack.push(i);
         }
 
         return ans;
     }
 
-    public int[] previousGreaterElement(int[] nums) {
+    private int[] previousGreaterElement(int[] nums) {
         var n = nums.length;
 
         int[] ans = new int[n];
-        var monotonicStack = new Stack<Integer>();
+        var stack = new Stack<Integer>();
 
         for (var i = 0; i < n; i++) {
-            var num = nums[i];
+            var currNum = nums[i];
 
-            while (!monotonicStack.isEmpty() && num >= nums[monotonicStack.peek()])
-                monotonicStack.pop();
+            while (!stack.isEmpty() && currNum >= nums[stack.peek()])
+                stack.pop();
 
-            ans[i] = (monotonicStack.isEmpty()) ? -1 : monotonicStack.peek();
-            monotonicStack.push(i);
+            ans[i] = stack.isEmpty() ? -1 : stack.peek();
+            stack.push(i);
         }
 
         return ans;
     }
 
-    public int[] previousSmallerElementIndexes(int[] nums) {
+    private int[] nextSmallerElement(int[] nums) {
         var n = nums.length;
 
         int[] ans = new int[n];
-        var monotonicStack = new Stack<Integer>();
-
-        for (var i = 0; i < n; i++) {
-            var num = nums[i];
-
-            while (!monotonicStack.isEmpty() && num < nums[monotonicStack.peek()])
-                monotonicStack.pop();
-
-            ans[i] = (monotonicStack.isEmpty()) ? -1 : monotonicStack.peek();
-            monotonicStack.push(i);
-        }
-
-        return ans;
-    }
-
-    public int[] nextSmallerElementIndexes(int[] nums) {
-        var n = nums.length;
-
-        int[] ans = new int[n];
-        var monotonicStack = new Stack<Integer>();
+        var stack = new Stack<Integer>();
 
         for (var i = n - 1; i >= 0; i--) {
-            var num = nums[i];
+            var currNum = nums[i];
 
-            while (!monotonicStack.isEmpty() && num <= nums[monotonicStack.peek()])
-                monotonicStack.pop();
+            while (!stack.isEmpty() && currNum <= nums[stack.peek()])
+                stack.pop();
 
-            ans[i] = (monotonicStack.isEmpty()) ? n : monotonicStack.peek();
-            monotonicStack.push(i);
+            ans[i] = stack.isEmpty() ? n : stack.peek();
+            stack.push(i);
         }
 
         return ans;
     }
+
+    private int[] previousSmallerElement(int[] nums) {
+        var n = nums.length;
+
+        int[] ans = new int[n];
+        var stack = new Stack<Integer>();
+
+        for (var i = 0; i < n; i++) {
+            var currNum = nums[i];
+
+            while (!stack.isEmpty() && currNum < nums[stack.peek()])
+                stack.pop();
+
+            ans[i] = stack.isEmpty() ? -1 : stack.peek();
+            stack.push(i);
+        }
+
+        return ans;
+    }
+
 }
