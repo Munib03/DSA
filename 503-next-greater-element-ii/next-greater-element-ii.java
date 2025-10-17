@@ -2,32 +2,23 @@ class Solution {
     public int[] nextGreaterElements(int[] nums) {
         var n = nums.length;
 
-        int[] ans = new int[n];
-        var monotonicStack = new Stack<Integer>();
+        int[] ans = new int[2 * n];
+        for (var i = 0; i < 2 * n; i++)
+            ans[i] = nums[i % n];
 
-        for (var i = n - 1; i >= 0; i--) {
-            var num = nums[i];
+        var stack = new Stack<Integer>();
+        int[] theAns = new int[2 * n];
 
-            while (!monotonicStack.isEmpty() && num >= monotonicStack.peek())
-                monotonicStack.pop();
+        for (var i = 2 * n - 1; i >= 0; i--) {
+            var currNum = ans[i];
 
-            monotonicStack.push(num);
+            while (!stack.isEmpty() && currNum >= stack.peek())
+                stack.pop();
+
+            theAns[i] = stack.isEmpty() ? -1 : stack.peek();
+            stack.push(currNum);
         }
 
-        for (var i = n - 1; i >= 0; i--) {
-            var num = nums[i];
-
-            while (!monotonicStack.isEmpty() && num >= monotonicStack.peek())
-                monotonicStack.pop();
-
-            if (monotonicStack.isEmpty())
-                ans[i] = -1;
-            else
-                ans[i] = monotonicStack.peek();
-
-            monotonicStack.push(num);
-        }
-
-        return ans;
+        return Arrays.copyOf(theAns, n);
     }
 }
