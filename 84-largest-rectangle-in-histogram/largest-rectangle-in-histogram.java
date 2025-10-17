@@ -1,60 +1,61 @@
 class Solution {
-
     public int largestRectangleArea(int[] heights) {
         var n = heights.length;
 
+        var pse = previousSmallerElementsIndex(heights);
+        var nse = nextSmallerElementsIndex(heights);
+
         var max = 0;
-        var pse = previousSmallerElement(heights);
-        var nse = nextSmallerElement(heights);
 
         for (var i = 0; i < n; i++) {
-            var left = pse[i];
-            var right = nse[i];
+            var currPSE = pse[i];
+            var currNSE = nse[i];
 
-            var window = (right - left) - 1;
-            var windowSize = window * heights[i];
+            var window = (currNSE - currPSE) - 1;
+            var currMax = window * heights[i];
 
-            max = Math.max(max, windowSize);
+            max = Math.max(max, currMax);
         }
 
         return max;
     }
 
-    public int[] previousSmallerElement(int[] nums) {
+    private int[] previousSmallerElementsIndex(int[] nums) {
         var n = nums.length;
 
         int[] ans = new int[n];
-        var monotonicStack = new Stack<Integer>();
+        var stack = new Stack<Integer>();
 
         for (var i = 0; i < n; i++) {
-            var num = nums[i];
+            var currNum = nums[i];
 
-            while (!monotonicStack.isEmpty() && num <= nums[monotonicStack.peek()])
-                monotonicStack.pop();
+            while (!stack.isEmpty() && currNum <= nums[stack.peek()])
+                stack.pop();
 
-            ans[i] = (monotonicStack.isEmpty()) ? -1 : monotonicStack.peek();
-            monotonicStack.push(i);
+            ans[i] = stack.isEmpty() ? -1 : stack.peek();
+            stack.push(i);
         }
 
         return ans;
     }
 
-    public int[] nextSmallerElement(int[] nums) {
+    private int[] nextSmallerElementsIndex(int[] nums) {
         var n = nums.length;
 
         int[] ans = new int[n];
-        var monotonicStack = new Stack<Integer>();
+        var stack = new Stack<Integer>();
 
         for (var i = n - 1; i >= 0; i--) {
-            var num = nums[i];
+            var currNum = nums[i];
 
-            while (!monotonicStack.isEmpty() && num <= nums[monotonicStack.peek()])
-                monotonicStack.pop();
+            while (!stack.isEmpty() && currNum <= nums[stack.peek()])
+                stack.pop();
 
-            ans[i] = (monotonicStack.isEmpty()) ? n : monotonicStack.peek();
-            monotonicStack.push(i);
+            ans[i] = stack.isEmpty() ? n : stack.peek();
+            stack.push(i);
         }
 
         return ans;
     }
+
 }
