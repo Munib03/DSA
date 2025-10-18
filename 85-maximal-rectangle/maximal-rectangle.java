@@ -1,86 +1,97 @@
 class Solution {
+public int maximalRectangle(char[][] matrix) {
+  var thePrefixSumArr = prefixSum(matrix);
 
-    public int maximalRectangle(char[][] matrix) {
-        var n = matrix.length;
-        var m = matrix[0].length;
+  var maxArea = 0;
+  for (var theMat : thePrefixSumArr)
+    maxArea = Math.max(largestRectangleArea(theMat), maxArea);
 
-        int[][] prefixSumArr = new int[n][m];
+  return maxArea;
+}
 
-        for (var i = 0; i < m; i++) {
-            var sum = 0;
+private int[][] prefixSum(char[][] mat) {
+  var n = mat.length;
+  var m = mat[0].length;
 
-            for (var j = 0; j < n; j++) {
-                if (matrix[j][i] == '0')
-                    sum = 0;
-                else
-                    sum += (matrix[j][i] - '0');
+  int[][] ans = new int[n][m];
 
-                prefixSumArr[j][i] = sum;
-            }
-        }
+  for (var i = 0; i < m; i++) {
+    var sum = 0;
 
-        var max = 0;
-        for (var nums : prefixSumArr)
-            max = Math.max(max, largestRectangleArea(nums));
+    for (var j = 0; j < n; j++) {
+      var curr = mat[j][i];
 
-        return max;
+      if (curr == '0')
+        sum = 0;
+      else
+        sum += 1;
+
+      ans[j][i] = sum;
     }
+  }
 
-    public int largestRectangleArea(int[] heights) {
-        var n = heights.length;
 
-        var max = 0;
-        var pse = previousSmallerElement(heights);
-        var nse = nextSmallerElement(heights);
+  return ans;
+}
 
-        for (var i = 0; i < n; i++) {
-            var left = pse[i];
-            var right = nse[i];
+public int largestRectangleArea(int[] heights) {
+  var n = heights.length;
 
-            var window = (right - left) - 1;
-            var windowSize = window * heights[i];
+  var pse = previousSmallerElementsIndex(heights);
+  var nse = nextSmallerElementsIndex(heights);
 
-            max = Math.max(max, windowSize);
-        }
+  var max = 0;
 
-        return max;
-    }
+  for (var i = 0; i < n; i++) {
+    var currPSE = pse[i];
+    var currNSE = nse[i];
 
-    public int[] previousSmallerElement(int[] nums) {
-        var n = nums.length;
+    var window = (currNSE - currPSE) - 1;
+    var currMax = window * heights[i];
 
-        int[] ans = new int[n];
-        var monotonicStack = new Stack<Integer>();
+    max = Math.max(max, currMax);
+  }
 
-        for (var i = 0; i < n; i++) {
-            var num = nums[i];
+  return max;
+}
 
-            while (!monotonicStack.isEmpty() && num <= nums[monotonicStack.peek()])
-                monotonicStack.pop();
 
-            ans[i] = (monotonicStack.isEmpty()) ? -1 : monotonicStack.peek();
-            monotonicStack.push(i);
-        }
+private int[] previousSmallerElementsIndex(int[] nums) {
+  var n = nums.length;
 
-        return ans;
-    }
+  int[] ans = new int[n];
+  var stack = new Stack<Integer>();
 
-    public int[] nextSmallerElement(int[] nums) {
-        var n = nums.length;
+  for (var i = 0; i < n; i++) {
+    var currNum = nums[i];
 
-        int[] ans = new int[n];
-        var monotonicStack = new Stack<Integer>();
+    while (!stack.isEmpty() && currNum <= nums[stack.peek()])
+      stack.pop();
 
-        for (var i = n - 1; i >= 0; i--) {
-            var num = nums[i];
+    ans[i] = stack.isEmpty() ? -1 : stack.peek();
+    stack.push(i);
+  }
 
-            while (!monotonicStack.isEmpty() && num <= nums[monotonicStack.peek()])
-                monotonicStack.pop();
+  return ans;
+}
 
-            ans[i] = (monotonicStack.isEmpty()) ? n : monotonicStack.peek();
-            monotonicStack.push(i);
-        }
+private int[] nextSmallerElementsIndex(int[] nums) {
+  var n = nums.length;
 
-        return ans;
-    }
+  int[] ans = new int[n];
+  var stack = new Stack<Integer>();
+
+  for (var i = n - 1; i >= 0; i--) {
+    var currNum = nums[i];
+
+    while (!stack.isEmpty() && currNum <= nums[stack.peek()])
+      stack.pop();
+
+    ans[i] = stack.isEmpty() ? n : stack.peek();
+    stack.push(i);
+  }
+
+  return ans;
+}
+
 }
