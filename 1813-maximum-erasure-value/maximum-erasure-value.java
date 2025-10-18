@@ -2,7 +2,7 @@ class Solution {
     public int maximumUniqueSubarray(int[] nums) {
         var n = nums.length;
 
-        var map = new HashMap<Integer, Integer>();
+        int[] freqArray = new int[10001];
         var maxSum = 0;
         var currSum = 0;
 
@@ -12,19 +12,15 @@ class Solution {
         while (right < n) {
             var currNum = nums[right];
 
-            map.put(currNum, map.getOrDefault(currNum, 0) + 1);
+            freqArray[currNum]++;
             currSum += currNum;
-            var currNumFreq = map.getOrDefault(currNum, 0);
+            var currNumFreq = freqArray[currNum];
 
             if (currNumFreq > 1) {
-                while (map.get(currNum) > 1) {
+                while (freqArray[currNum] > 1) {
                     var me = nums[left];
-                    map.put(me, map.get(me) - 1);
-
+                    freqArray[me]--;
                     currSum -= me;
-                    if (map.get(me) == 0)
-                        map.remove(me);
-
                     left++;
                 }
             } else {
