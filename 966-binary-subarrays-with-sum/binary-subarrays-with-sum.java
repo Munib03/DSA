@@ -1,12 +1,9 @@
 class Solution {
     public int numSubarraysWithSum(int[] nums, int goal) {
-        var ans1 = finder(nums, goal);
-        var ans2 = finder(nums, goal - 1);
-
-        return ans1 - ans2;
+        return findLessOrEqualToGoal(nums, goal) - findLessOrEqualToGoal(nums, goal - 1);
     }
 
-    private int finder(int[] nums, int goal) {
+    private int findLessOrEqualToGoal(int[] nums, int goal) {
         if (goal < 0)
             return 0;
 
@@ -22,15 +19,14 @@ class Solution {
             sum += nums[right];
 
             while (sum > goal) {
-                sum -= nums[left];
-                left++;
+                sum -= nums[left++];
             }
 
-            cnt += right - left + 1;
-
+            cnt += (right - left) + 1;
             right++;
         }
 
         return cnt;
     }
+
 }
