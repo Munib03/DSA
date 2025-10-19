@@ -2,24 +2,28 @@ class Solution {
     public int numberOfSubstrings(String s) {
         var n = s.length();
 
+        var map = new HashMap<Character, Integer>();
         var cnt = 0;
-        var aLastSeen = -1;
-        var bLastSeen = -1;
-        var cLastSeen = -1;
 
-        for (var i = 0; i < n; i++) {
-            var curr = s.charAt(i);
+        var left = 0;
+        var right = 0;
 
-            switch (curr) {
-                case 'a' -> aLastSeen = i;
-                case 'b' -> bLastSeen = i;
-                case 'c' -> cLastSeen = i;
+        while (right < n) {
+            var currChar = s.charAt(right);
+
+            map.put(currChar, map.getOrDefault(currChar, 0) + 1);
+            while (map.size() == 3) {
+                var me = s.charAt(left);
+
+                map.put(me, map.get(me) - 1);
+                if (map.get(me) == 0)
+                    map.remove(me);
+
+                cnt += n - right;
+                left++;
             }
 
-            if (aLastSeen != -1 && bLastSeen != -1 && cLastSeen != -1) {
-                var min = Math.min(aLastSeen, Math.min(bLastSeen, cLastSeen));
-                cnt += min + 1;
-            }
+            right++;
         }
 
         return cnt;
