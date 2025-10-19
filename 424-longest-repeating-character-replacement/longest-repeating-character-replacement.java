@@ -3,30 +3,37 @@ class Solution {
         var n = s.length();
 
         var maxLen = 0;
-
         var maxSoFar = 0;
-        int[] freqArr = new int[26];
+        var map = new HashMap<Character, Integer>();
 
         var left = 0;
         var right = 0;
 
         while (right < n) {
-            var ou = s.charAt(right);
+            var currChar = s.charAt(right);
 
-            freqArr[ou - 'A']++;
-            maxSoFar = Math.max(maxSoFar, freqArr[ou - 'A']);
+            map.put(currChar, map.getOrDefault(currChar, 0) + 1);
+            maxSoFar = Math.max(maxSoFar, map.get(currChar));
 
-            if (((right - left) + 1) - maxSoFar > k) {
-                freqArr[s.charAt(left) - 'A']--;
+            while (((right - left + 1) - maxSoFar) > k) {
+                var me = s.charAt(left);
+
+                map.put(me, map.get(me) - 1);
+                if (map.get(me) == 0)
+                    map.remove(me);
+
+                maxSoFar = 0;
+                for (var val : map.values())
+                    maxSoFar = Math.max(maxSoFar, val);
+
                 left++;
             }
 
-            else
-                maxLen = Math.max(maxLen, right - left + 1);
-
+            maxLen = Math.max(maxLen, right - left + 1);
             right++;
         }
 
         return maxLen;
     }
+
 }
