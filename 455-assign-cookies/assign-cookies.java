@@ -7,6 +7,7 @@ class Solution {
         Arrays.sort(s);
 
         var cnt = 0;
+
         var left = 0;
         var right = 0;
 
@@ -14,8 +15,9 @@ class Solution {
             var greedFactor = g[left];
             var cookieSize = s[right];
 
-            if (cookieSize >= greedFactor) {
+            if (greedFactor <= cookieSize) {
                 cnt++;
+
                 left++;
             }
 
@@ -24,4 +26,5 @@ class Solution {
 
         return cnt;
     }
+
 }
