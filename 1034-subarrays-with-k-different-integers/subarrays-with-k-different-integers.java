@@ -1,40 +1,31 @@
 class Solution {
     public int subarraysWithKDistinct(int[] nums, int k) {
-        var ans1 = finder(nums, k);
-        var ans2 = finder(nums, k - 1);
-
-        return ans1 - ans2;
+        return numOfSubArrLessOrEquThanK(nums, k) - numOfSubArrLessOrEquThanK(nums, k - 1);
     }
 
-    private int finder(int[] nums, int k) {
-        if (k < 0)
-            return 0;
-
+    private int numOfSubArrLessOrEquThanK(int[] nums, int k) {
         var n = nums.length;
-
         var cnt = 0;
-        var map = new HashMap<Integer, Integer>();
 
+        var map = new HashMap<Integer, Integer>();
         var left = 0;
         var right = 0;
 
         while (right < n) {
-            var ou = nums[right];
+            var num = nums[right];
 
-            map.put(ou, map.getOrDefault(ou, 0) + 1);
+            map.put(num, map.getOrDefault(num, 0) + 1);
             while (map.size() > k) {
                 var me = nums[left];
-                map.put(me, map.get(me) - 1);
 
+                map.put(me, map.get(me) - 1);
                 if (map.get(me) == 0)
                     map.remove(me);
 
                 left++;
             }
 
-            if (map.size() <= k)
-                cnt += right - left;
-
+            cnt += (right - left) + 1;
             right++;
         }
 
