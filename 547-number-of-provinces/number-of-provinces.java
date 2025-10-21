@@ -1,100 +1,77 @@
 class Solution {
-    class Graph {
-        private class Node {
-            private String label;
-            private int inputDegree;
-            private int outputDegree;
+    private static class UnWeightedGraph {
+        private static class Node {
+            private final int label;
 
-            private Node(String label) {
+            private Node(int label) {
                 this.label = label;
             }
 
             @Override
             public String toString() {
-                return label;
+                return label + "";
             }
         }
 
-        private Map<String, Node> nodes = new HashMap<>();
-        private Map<Node, List<Node>> adjacencyList = new HashMap<>();
+        private final Map<Integer, Node> nodesMap = new HashMap<>();
+        private final Map<Node, List<Node>> adjacencyList = new HashMap<>();
 
-        public void addNode(String label) {
-            var newNode = new Node(label);
+        public void addNode(int val) {
+            var newNode = new Node(val);
 
-            nodes.putIfAbsent(label, newNode);
+            nodesMap.putIfAbsent(val, newNode);
             adjacencyList.putIfAbsent(newNode, new ArrayList<>());
         }
 
-        public void addEdge(String from, String to) {
-            var fromNode = nodes.get(from);
-            var toNode = nodes.get(to);
+        public void addEdge(int from, int to) {
+            var fromNode = nodesMap.get(from);
+            var toNode = nodesMap.get(to);
 
             if (fromNode == null || toNode == null)
                 return;
 
             adjacencyList.get(fromNode).add(toNode);
-            fromNode.outputDegree++;
-            toNode.inputDegree++;
         }
 
-        public int numberOfComponents() {
-            var set = new HashSet<String>();
+        public int findNumberOfCities() {
+            var set = new HashSet<Node>();
             var cnt = 0;
 
-            for (var node : nodes.values()) {
-                var flag = false;
-                var dfs = depthFirstSearch(node, new HashSet<>(), new ArrayList<>());
-
-                for (var sth : dfs) {
-                    if (set.contains(sth)) {
-                        flag = true;
-                        break;
-                    } else
-                        set.add(sth);
-                }
-
-                if (!flag)
+            for (var node : nodesMap.values()) {
+                if (!set.contains(node)) {
+                    dfs(node, set);
                     cnt++;
+                }
             }
 
             return cnt;
         }
 
-        private List<String> depthFirstSearch(Node start, Set<Node> set, List<String> list) {
-            if (start == null)
-                return list;
+        // Inner Details of the class
+        private void dfs(Node root, Set<Node> set) {
+            if (root == null || set.contains(root))
+                return;
 
-            list.add(start.label);
-            set.add(start);
-
-            for (var neighbor : adjacencyList.get(start))
+            set.add(root);
+            for (var neighbor : adjacencyList.get(root))
                 if (!set.contains(neighbor))
-                    depthFirstSearch(neighbor, set, list);
-
-            return list;
+                    dfs(neighbor, set);
         }
     }
 
     public int findCircleNum(int[][] isConnected) {
         var n = isConnected.length;
 
-        var graph = new Graph();
-
+        var graph = new UnWeightedGraph();
         for (var i = 1; i <= n; i++)
-            graph.addNode(i + "");
+            graph.addNode(i);
 
-        for (var i = 0; i < n; i++) {
-            var currArray = isConnected[i];
+        for (var i = 0; i < n; i++)
+            for (var j = 0; j < isConnected[i].length; j++)
+                if (isConnected[i][j] == 1)
+                    graph.addEdge(i + 1, j + 1);
 
-            for (var j = 0; j < currArray.length; j++) {
-                var currElement = isConnected[i][j];
-
-                if (currElement == 1)
-                    graph.addEdge((i + 1) + "", (j + 1) + "");
-            }
-        }
-
-        return graph.numberOfComponents();
+        return graph.findNumberOfCities();
     }
 
 }
