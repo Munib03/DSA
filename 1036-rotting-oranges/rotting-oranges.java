@@ -17,6 +17,9 @@ class Solution {
             }
         }
 
+        if (freshOranges == 0)
+            return 0;
+
         var maxTime = 0;
 
         var cnt = 0;
