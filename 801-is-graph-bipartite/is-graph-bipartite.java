@@ -1,31 +1,21 @@
 class Solution {
-    class Graph {
-        private class Node {
-            private final String label;
-
-            private Node(String label) {
-                this.label = label;
-            }
-
-            @Override
-            public String toString() {
-                return label;
-            }
+    private static class UnWeightedGraph {
+        private record Node(int label) {
         }
 
-        private final Map<String, Node> nodes = new HashMap<>();
+        private final Map<Integer, Node> nodesMap = new HashMap<>();
         private final Map<Node, List<Node>> adjacencyList = new HashMap<>();
 
-        public void addNode(String label) {
-            var newNode = new Node(label);
+        public void addNode(int val) {
+            var newNode = new Node(val);
 
-            nodes.putIfAbsent(label, newNode);
+            nodesMap.putIfAbsent(val, newNode);
             adjacencyList.putIfAbsent(newNode, new ArrayList<>());
         }
 
-        public void addEdge(String from, String to) {
-            var fromNode = nodes.get(from);
-            var toNode = nodes.get(to);
+        public void addEdge(int from, int to) {
+            var fromNode = nodesMap.get(from);
+            var toNode = nodesMap.get(to);
 
             if (fromNode == null || toNode == null)
                 return;
@@ -33,26 +23,25 @@ class Solution {
             adjacencyList.get(fromNode).add(toNode);
         }
 
-        public boolean isBipartiteGraph() {
-            var map = new HashMap<String, Integer>();
+        private boolean isBipartiteGraph() {
+            var map = new HashMap<Node, Integer>();
 
-            for (var node : nodes.values()) {
-                if (!map.containsKey(node.label)) {
+            for (var node : nodesMap.values()) {
+                if (!map.containsKey(node))
                     if (!dfs(node, map, 0))
                         return false;
-                }
             }
 
             return true;
         }
 
         // Inner Details of the class
-        private boolean dfs(Node root, Map<String, Integer> map, int color) {
-            map.putIfAbsent(root.label, color);
+        private boolean dfs(Node node, Map<Node, Integer> map, int color) {
+            map.putIfAbsent(node, color);
 
-            for (var neighbor : adjacencyList.get(root)) {
-                if (map.containsKey(neighbor.label)) {
-                    if (map.get(neighbor.label) == color)
+            for (var neighbor : adjacencyList.get(node)) {
+                if (map.containsKey(neighbor)) {
+                    if (map.get(neighbor) == color)
                         return false;
                 } else {
                     var res = dfs(neighbor, map, 1 - color);
@@ -68,17 +57,15 @@ class Solution {
     public boolean isBipartite(int[][] graph) {
         var n = graph.length;
 
-        var theRealGraph = new Graph();
+        var theGraph = new UnWeightedGraph();
         for (var i = 0; i < n; i++)
-            theRealGraph.addNode(i + "");
+            theGraph.addNode(i);
 
-        for (int i = 0; i < graph.length; i++) {
-            for (int neighbor : graph[i]) {
-                theRealGraph.addEdge(i + "", neighbor + "");
-            }
-        }
+        for (var i = 0; i < n; i++)
+            for (var j = 0; j < graph[i].length; j++)
+                theGraph.addEdge(i, graph[i][j]);
 
-        return theRealGraph.isBipartiteGraph();
+        return theGraph.isBipartiteGraph();
     }
 
 }
