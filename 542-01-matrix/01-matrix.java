@@ -1,47 +1,51 @@
 class Solution {
-    public int[][] updateMatrix(int[][] mat) {
-        var n = mat.length;
-        var m = mat[0].length;
+public int[][] updateMatrix(int[][] mat) {
+  var n = mat.length;
+  var m = mat[0].length;
 
-        int[][] dist = new int[n][m];
-        var queue = new LinkedList<int[]>();
+  int[][] ans = new int[n][m];
+  var queue = new LinkedList<Triple>();
+  var set = new HashSet<String>();
 
-        for (var i = 0; i < n; i++) {
-            for (var j = 0; j < m; j++) {
+  for (var i=0; i < n; i++) {
+    for (var j=0; j < m; j++) {
+      var curr = mat[i][j];
 
-                if (mat[i][j] == 0) {
-                    dist[i][j] = 0;
-                    queue.offer(new int[] { i, j });
-                } else {
-                    dist[i][j] = Integer.MAX_VALUE;
-                }
-            }
-        }
-
-        int[][] directions = {
-                { 0, 1 },
-                { 1, 0 },
-                { 0, -1 },
-                { -1, 0 }
-        };
-
-        while (!queue.isEmpty()) {
-            var frontOfQueue = queue.poll();
-
-            var row = frontOfQueue[0];
-            var col = frontOfQueue[1];
-
-            for (var direction : directions) {
-                var nr = row + direction[0];
-                var nc = col + direction[1];
-
-                if (nr >= 0 && nr < n && nc >= 0 && nc < m && dist[nr][nc] > dist[row][col] + 1) {
-                    dist[nr][nc] = dist[row][col] + 1;
-                    queue.offer(new int[] { nr, nc });
-                }
-            }
-        }
-
-        return dist;
+      if (curr == 0) {
+        queue.offer(new Triple(i, j, 0));
+        set.add(i + ", " + j);
+        ans[i][j] = 0;
+      }
+      else
+        ans[i][j] = Integer.MAX_VALUE;
     }
+  }
+
+  int[] rows = {-1, 0, 1, 0};
+  int[] cols = {0, 1, 0, -1};
+
+  while (!queue.isEmpty()) {
+    var topOfQueue = queue.pop();
+    var row = topOfQueue.row;
+    var col = topOfQueue.col;
+    var numOfSteps = topOfQueue.numberOfSteps;
+
+    for (var i=0; i < rows.length; i++) {
+      var newRow = rows[i] + row;
+      var newCol = cols[i] + col;
+
+      if (newRow >= 0 && newRow < n && newCol >= 0 && newCol < m && !set.contains(newRow + ", " + newCol)) {
+        queue.offer(new Triple(newRow, newCol, numOfSteps + 1));
+        set.add(newRow + ", " + newCol);
+        ans[newRow][newCol] = numOfSteps + 1;
+      }
+    }
+  }
+
+  return ans;
+}
+
+private record Triple(int row, int col, int numberOfSteps) {
+
+}
 }
