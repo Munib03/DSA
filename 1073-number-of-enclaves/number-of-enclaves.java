@@ -3,44 +3,59 @@ class Solution {
         var n = grid.length;
         var m = grid[0].length;
 
-        for (var i = 0; i < n; i++) {
-            if (grid[i][0] == 1)
-                dfs(grid, i, 0);
-
-            if (grid[i][m - 1] == 1)
-                dfs(grid, i, m - 1);
-        }
+        var queue = new LinkedList<int[]>();
 
         for (var i = 0; i < m; i++) {
-            if (grid[0][i] == 1)
-                dfs(grid, 0, i);
+            if (grid[0][i] == 1) {
+                queue.offer(new int[] { 0, i });
+                grid[0][i] = 0;
+            }
 
-            if (grid[n - 1][i] == 1)
-                dfs(grid, n - 1, i);
+            if (grid[n - 1][i] == 1) {
+                queue.offer(new int[] { n - 1, i });
+                grid[n - 1][i] = 0;
+            }
+        }
+
+        for (var i = 0; i < n; i++) {
+            if (grid[i][0] == 1) {
+                queue.offer(new int[] { i, 0 });
+                grid[i][0] = 0;
+            }
+
+            if (grid[i][m - 1] == 1) {
+                queue.offer(new int[] { i, m - 1 });
+                grid[i][m - 1] = 0;
+            }
+        }
+
+        int[] rows = { -1, 0, 1, 0 };
+        int[] cols = { 0, 1, 0, -1 };
+
+        while (!queue.isEmpty()) {
+            var topOfQueue = queue.poll();
+
+            var row = topOfQueue[0];
+            var col = topOfQueue[1];
+
+            for (var i = 0; i < rows.length; i++) {
+                var newRow = row + rows[i];
+                var newCol = col + cols[i];
+
+                if (newRow >= 0 && newRow < n && newCol >= 0 && newCol < m && grid[newRow][newCol] == 1) {
+                    queue.offer(new int[] { newRow, newCol });
+                    grid[newRow][newCol] = 0;
+                }
+            }
         }
 
         var cnt = 0;
-        for (var num : grid)
-            for (var sth : num)
-                if (sth == 1)
+        for (var i = 0; i < n; i++)
+            for (var j = 0; j < m; j++)
+                if (grid[i][j] == 1)
                     cnt++;
 
         return cnt;
     }
 
-    private void dfs(int[][] grid, int row, int col) {
-        if (row < 0 || row >= grid.length || col < 0 || col >= grid[0].length)
-            return;
-
-        else if (grid[row][col] == 0)
-            return;
-
-        else
-            grid[row][col] = 0;
-
-        dfs(grid, row + 1, col);
-        dfs(grid, row - 1, col);
-        dfs(grid, row, col + 1);
-        dfs(grid, row, col - 1);
-    }
 }
