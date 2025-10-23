@@ -1,31 +1,26 @@
 class Solution {
-    private class Graph {
+    private class UnWeightedGraph {
         private class Node {
             private int label;
 
             private Node(int label) {
                 this.label = label;
             }
-
-            @Override
-            public String toString() {
-                return label + "";
-            }
         }
 
-        private final Map<Integer, Node> nodes = new HashMap<>();
+        private final Map<Integer, Node> nodesMap = new HashMap<>();
         private final Map<Node, List<Node>> adjacencyList = new HashMap<>();
 
         public void addNode(int label) {
             var newNode = new Node(label);
 
-            nodes.putIfAbsent(label, newNode);
-            adjacencyList.put(newNode, new ArrayList<>());
+            nodesMap.putIfAbsent(label, newNode);
+            adjacencyList.putIfAbsent(newNode, new ArrayList<>());
         }
 
         public void addEdge(int from, int to) {
-            var fromNode = nodes.get(from);
-            var toNode = nodes.get(to);
+            var fromNode = nodesMap.get(from);
+            var toNode = nodesMap.get(to);
 
             if (fromNode == null || toNode == null)
                 return;
@@ -34,36 +29,36 @@ class Solution {
         }
 
         public boolean hasCycle() {
-            var visiting = new HashSet<Node>();
             var visited = new HashSet<Node>();
+            var visiting = new HashSet<Node>();
 
-            for (var node : nodes.values()) {
-                if (hasCycle(node, visiting, visited))
-                    return true;
-            }
+            for (var node : nodesMap.values())
+                if (!visited.contains(node))
+                    if (hasCycle(node, visiting, visited))
+                        return true;
 
             return false;
         }
 
         public int[] topologicalSort() {
             var set = new HashSet<Node>();
-            var stack = new Stack<Node>();
+            var stack = new Stack<Integer>();
 
-            for (var node : nodes.values()) {
+            for (var node : nodesMap.values())
                 if (!set.contains(node))
                     topologicalSort(node, set, stack);
-            }
 
-            int[] ansNums = new int[stack.size()];
+            int[] ans = new int[stack.size()];
             var index = 0;
-            while (!stack.isEmpty())
-                ansNums[index++] = stack.pop().label;
 
-            return ansNums;
+            while (!stack.isEmpty())
+                ans[index++] = stack.pop();
+
+            return ans;
         }
 
-        // Inner Details
-        private void topologicalSort(Node node, Set<Node> set, Stack<Node> stack) {
+        // Inner Detaisl of the class
+        private void topologicalSort(Node node, Set<Node> set, Stack<Integer> stack) {
             if (node == null || set.contains(node))
                 return;
 
@@ -73,7 +68,7 @@ class Solution {
                 if (!set.contains(neighbor))
                     topologicalSort(neighbor, set, stack);
 
-            stack.push(node);
+            stack.push(node.label);
         }
 
         private boolean hasCycle(Node node, Set<Node> visiting, Set<Node> visited) {
@@ -90,21 +85,22 @@ class Solution {
                     return true;
             }
 
-            visiting.remove(node);
             visited.add(node);
+            visiting.remove(node);
 
             return false;
         }
     }
 
     public int[] findOrder(int numCourses, int[][] prerequisites) {
-        var graph = new Graph();
+        var graph = new UnWeightedGraph();
 
         for (var i = 0; i < numCourses; i++)
             graph.addNode(i);
 
-        for (var edge : prerequisites)
+        for (var edge : prerequisites) {
             graph.addEdge(edge[1], edge[0]);
+        }
 
         if (graph.hasCycle())
             return new int[] {};
