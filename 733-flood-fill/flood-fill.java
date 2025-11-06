@@ -1,25 +1,37 @@
 class Solution {
-public int[][] floodFill(int[][] image, int sr, int sc, int color) {
-  var initialColor = image[sr][sc];
-  if (initialColor == color)
-    return image;
+    public int[][] floodFill(int[][] image, int sr, int sc, int color) {
+        var n = image.length;
+        var m = image[0].length;
 
-  dfs(image, sr, sc, initialColor, color);
+        var initialColor = image[sr][sc];
+        if (initialColor == color)
+            return image;
 
-  return image;
-}
+        int[] rows = { -1, 0, 1, 0 };
+        int[] cols = { 0, 1, 0, -1 };
 
-private void dfs(int[][] image, int row, int col, int initialColor, int color) {
-  if (row < 0 || row >= image.length || col < 0 || col >= image[row].length || image[row][col] != initialColor)
-    return;
+        image[sr][sc] = color;
 
-  image[row][col] = color;
+        var queue = new LinkedList<int[]>();
+        queue.offer(new int[] { sr, sc });
 
-  dfs(image, row + 1, col, initialColor, color);
-  dfs(image, row - 1, col, initialColor, color);
-  dfs(image, row, col + 1, initialColor, color);
-  dfs(image, row, col - 1, initialColor, color);
+        while (!queue.isEmpty()) {
+            var topOfQueue = queue.poll();
+            var row = topOfQueue[0];
+            var col = topOfQueue[1];
 
-}
+            for (var i = 0; i < rows.length; i++) {
+                var newRow = row + rows[i];
+                var newCol = col + cols[i];
+
+                if (newRow >= 0 && newRow < n && newCol >= 0 && newCol < m && image[newRow][newCol] == initialColor) {
+                    queue.offer(new int[] { newRow, newCol });
+                    image[newRow][newCol] = color;
+                }
+            }
+        }
+
+        return image;
+    }
 
 }
