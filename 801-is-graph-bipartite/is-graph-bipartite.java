@@ -1,6 +1,16 @@
 class Solution {
-    private static class UnWeightedGraph {
-        private record Node(int label) {
+    private class UnWeightedGraph {
+        private class Node {
+            private final int label;
+
+            private Node(int label) {
+                this.label = label;
+            }
+
+            @Override
+            public String toString() {
+                return String.valueOf(label);
+            }
         }
 
         private final Map<Integer, Node> nodesMap = new HashMap<>();
@@ -16,37 +26,40 @@ class Solution {
         public void addEdge(int from, int to) {
             var fromNode = nodesMap.get(from);
             var toNode = nodesMap.get(to);
-
             if (fromNode == null || toNode == null)
                 return;
 
             adjacencyList.get(fromNode).add(toNode);
         }
 
-        private boolean isBipartiteGraph() {
-            var map = new HashMap<Node, Integer>();
+        public boolean isGraphBip() {
+            var colorMap = new HashMap<Integer, Integer>();
+            var queue = new LinkedList<Node>();
 
-            for (var node : nodesMap.values()) {
-                if (!map.containsKey(node))
-                    if (!dfs(node, map, 0))
-                        return false;
-            }
+            for (var startNode : nodesMap.values()) {
+                if (colorMap.containsKey(startNode.label))
+                    continue;
 
-            return true;
-        }
+                colorMap.put(startNode.label, 0);
+                queue.offer(startNode);
 
-        // Inner Details of the class
-        private boolean dfs(Node node, Map<Node, Integer> map, int color) {
-            map.putIfAbsent(node, color);
+                while (!queue.isEmpty()) {
+                    var top = queue.poll();
+                    int color = colorMap.get(top.label);
 
-            for (var neighbor : adjacencyList.get(node)) {
-                if (map.containsKey(neighbor)) {
-                    if (map.get(neighbor) == color)
-                        return false;
-                } else {
-                    var res = dfs(neighbor, map, 1 - color);
-                    if (!res)
-                        return false;
+                    var neighbors = adjacencyList.get(top);
+                    if (neighbors == null)
+                        continue;
+
+                    for (var neighbor : neighbors) {
+                        if (colorMap.containsKey(neighbor.label)) {
+                            if (colorMap.get(neighbor.label) == color)
+                                return false;
+                        } else {
+                            colorMap.put(neighbor.label, 1 - color);
+                            queue.offer(neighbor);
+                        }
+                    }
                 }
             }
 
@@ -56,16 +69,15 @@ class Solution {
 
     public boolean isBipartite(int[][] graph) {
         var n = graph.length;
-
-        var theGraph = new UnWeightedGraph();
+        var g = new UnWeightedGraph();
         for (var i = 0; i < n; i++)
-            theGraph.addNode(i);
+            g.addNode(i);
 
         for (var i = 0; i < n; i++)
             for (var j = 0; j < graph[i].length; j++)
-                theGraph.addEdge(i, graph[i][j]);
+                g.addEdge(i, graph[i][j]);
 
-        return theGraph.isBipartiteGraph();
+        return g.isGraphBip();
     }
 
 }
