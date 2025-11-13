@@ -1,24 +1,29 @@
 class Solution {
-    private class UnWeightedGraph {
+    private class UnWeightedGraph<T> {
         private class Node {
-            private int label;
+            private final T label;
 
-            private Node(int label) {
+            private Node(T label) {
                 this.label = label;
+            }
+
+            @Override
+            public String toString() {
+                return label.toString();
             }
         }
 
-        private final Map<Integer, Node> nodesMap = new HashMap<>();
+        private final Map<T, Node> nodesMap = new HashMap<>();
         private final Map<Node, List<Node>> adjacencyList = new HashMap<>();
 
-        public void addNode(int val) {
+        public void addNode(T val) {
             var newNode = new Node(val);
 
             nodesMap.putIfAbsent(val, newNode);
             adjacencyList.putIfAbsent(newNode, new ArrayList<>());
         }
 
-        public void addEdge(int from, int to) {
+        public void addEdge(T from, T to) {
             var fromNode = nodesMap.get(from);
             var toNode = nodesMap.get(to);
 
@@ -32,9 +37,10 @@ class Solution {
             var visited = new HashSet<Node>();
             var visiting = new HashSet<Node>();
 
-            for (var neighbor : nodesMap.values())
-                if (hasCycle(neighbor, visiting, visited))
+            for (var node : nodesMap.values()) {
+                if (hasCycle(node, visiting, visited))
                     return true;
+            }
 
             return false;
         }
@@ -47,14 +53,11 @@ class Solution {
                 if (visited.contains(neighbor))
                     continue;
 
-                else if (visiting.contains(neighbor))
-                    return true;
-
-                else if (hasCycle(neighbor, visiting, visited))
+                if (visiting.contains(neighbor) || hasCycle(neighbor, visiting, visited))
                     return true;
             }
 
-            visited.remove(node);
+            visiting.remove(node);
             visited.add(node);
 
             return false;
@@ -62,14 +65,12 @@ class Solution {
     }
 
     public boolean canFinish(int numCourses, int[][] prerequisites) {
-        var graph = new UnWeightedGraph();
-
+        var graph = new UnWeightedGraph<Integer>();
         for (var i = 0; i < numCourses; i++)
             graph.addNode(i);
 
-        for (var edge : prerequisites) {
-            graph.addEdge(edge[0], edge[1]);
-        }
+        for (var prerequisite : prerequisites)
+            graph.addEdge(prerequisite[1], prerequisite[0]);
 
         return !graph.hasCycle();
     }
