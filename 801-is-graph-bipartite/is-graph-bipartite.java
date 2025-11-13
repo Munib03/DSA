@@ -1,62 +1,60 @@
 class Solution {
-    private class UnWeightedGraph {
+    private class UnWeightedGraph<T> {
         private class Node {
-            private final int label;
+            private final T label;
 
-            private Node(int label) {
+            private Node(T label) {
                 this.label = label;
             }
 
             @Override
             public String toString() {
-                return String.valueOf(label);
+                return label.toString();
             }
         }
 
-        private final Map<Integer, Node> nodesMap = new HashMap<>();
+        private final Map<T, Node> nodesMap = new HashMap<>();
         private final Map<Node, List<Node>> adjacencyList = new HashMap<>();
 
-        public void addNode(int val) {
+        public void addNode(T val) {
             var newNode = new Node(val);
 
             nodesMap.putIfAbsent(val, newNode);
             adjacencyList.putIfAbsent(newNode, new ArrayList<>());
         }
 
-        public void addEdge(int from, int to) {
+        public void addEdge(T from, T to) {
             var fromNode = nodesMap.get(from);
             var toNode = nodesMap.get(to);
+
             if (fromNode == null || toNode == null)
                 return;
 
             adjacencyList.get(fromNode).add(toNode);
+            adjacencyList.get(toNode).add(fromNode);
         }
 
         public boolean isGraphBip() {
-            var colorMap = new HashMap<Integer, Integer>();
+            var colorMap = new HashMap<Node, Integer>();
             var queue = new LinkedList<Node>();
 
-            for (var startNode : nodesMap.values()) {
-                if (colorMap.containsKey(startNode.label))
+            for (var node : nodesMap.values()) {
+                if (colorMap.containsKey(node))
                     continue;
 
-                colorMap.put(startNode.label, 0);
-                queue.offer(startNode);
+                queue.offer(node);
+                colorMap.put(node, 0);
 
                 while (!queue.isEmpty()) {
-                    var top = queue.poll();
-                    int color = colorMap.get(top.label);
+                    var topOfQueue = queue.poll();
+                    var color = colorMap.get(topOfQueue);
 
-                    var neighbors = adjacencyList.get(top);
-                    if (neighbors == null)
-                        continue;
-
-                    for (var neighbor : neighbors) {
-                        if (colorMap.containsKey(neighbor.label)) {
-                            if (colorMap.get(neighbor.label) == color)
+                    for (var neighbor : adjacencyList.get(topOfQueue)) {
+                        if (colorMap.containsKey(neighbor)) {
+                            if (colorMap.get(neighbor).equals(color))
                                 return false;
                         } else {
-                            colorMap.put(neighbor.label, 1 - color);
+                            colorMap.put(neighbor, 1 - color);
                             queue.offer(neighbor);
                         }
                     }
@@ -69,15 +67,16 @@ class Solution {
 
     public boolean isBipartite(int[][] graph) {
         var n = graph.length;
-        var g = new UnWeightedGraph();
+
+        var theRealGraph = new UnWeightedGraph<Integer>();
         for (var i = 0; i < n; i++)
-            g.addNode(i);
+            theRealGraph.addNode(i);
 
         for (var i = 0; i < n; i++)
             for (var j = 0; j < graph[i].length; j++)
-                g.addEdge(i, graph[i][j]);
+                theRealGraph.addEdge(i, graph[i][j]);
 
-        return g.isGraphBip();
+        return theRealGraph.isGraphBip();
     }
 
 }
