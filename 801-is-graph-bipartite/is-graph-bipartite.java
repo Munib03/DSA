@@ -35,29 +35,29 @@ class Solution {
         }
 
         public boolean isGraphBip() {
-            var colorMap = new HashMap<Node, Integer>();
-            var queue = new LinkedList<Node>();
 
             for (var node : nodesMap.values()) {
-                if (colorMap.containsKey(node))
-                    continue;
+                var ans = isGraphBip(node, new HashMap<>(), 0);
+                if (!ans)
+                    return false;
+            }
 
-                queue.offer(node);
-                colorMap.put(node, 0);
+            return true;
+        }
 
-                while (!queue.isEmpty()) {
-                    var topOfQueue = queue.poll();
-                    var color = colorMap.get(topOfQueue);
+        // Inner Details of the class
+        private boolean isGraphBip(Node node, Map<Node, Integer> colorMap, int color) {
+            if (node == null)
+                return true;
 
-                    for (var neighbor : adjacencyList.get(topOfQueue)) {
-                        if (colorMap.containsKey(neighbor)) {
-                            if (colorMap.get(neighbor).equals(color))
-                                return false;
-                        } else {
-                            colorMap.put(neighbor, 1 - color);
-                            queue.offer(neighbor);
-                        }
-                    }
+            for (var neighbor : adjacencyList.get(node)) {
+                if (colorMap.containsKey(neighbor)) {
+                    if (colorMap.get(neighbor).equals(color))
+                        return false;
+                } else {
+                    colorMap.put(neighbor, 1 - color);
+                    if (!(isGraphBip(neighbor, colorMap, 1 - color)))
+                        return false;
                 }
             }
 
