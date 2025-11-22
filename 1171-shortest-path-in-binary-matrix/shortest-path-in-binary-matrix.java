@@ -1,69 +1,54 @@
 class Solution {
-    public int dij(int V, int[][] grid, int destination) {
-        int n = grid.length;
-        List<List<Pair<Integer, Integer>>> graph = new ArrayList<>();
+public int shortestPathBinaryMatrix(int[][] grid) {
+  var n = grid.length;
+  var m = grid[0].length;
 
-        for (int i = 0; i < n * n; i++)
-            graph.add(new ArrayList<>());
+  if (grid[0][0] == 1 || grid[n - 1][m - 1] == 1)
+    return -1;
 
-        int[] dr = { -1, -1, -1, 0, 0, 1, 1, 1 };
-        int[] dc = { -1, 0, 1, -1, 1, -1, 0, 1 };
+  var path = 1;
 
-        for (int r = 0; r < n; r++) {
-            for (int c = 0; c < n; c++) {
-                if (grid[r][c] == 1)
-                    continue;
-                int from = r * n + c;
-                for (int k = 0; k < 8; k++) {
-                    int nr = r + dr[k], nc = c + dc[k];
-                    if (nr >= 0 && nr < n && nc >= 0 && nc < n && grid[nr][nc] == 0) {
-                        int to = nr * n + nc;
-                        graph.get(from).add(new Pair<>(to, 1));
-                    }
-                }
-            }
+  var set = new HashSet<String>();
+  set.add("0,0");
+
+  var queue = new LinkedList<Pair>();
+  queue.offer(new Pair(0, 0));
+
+  int[] rows = {-1, -1, -1, 0, 0, 1, 1, 1};
+  int[] cols = {-1, 0, 1, -1, 1, -1, 0, 1};
+
+  while (!queue.isEmpty()) {
+    var size = queue.size();
+
+    while (size-- > 0) {
+      var topOfQueue = queue.poll();
+      var row = topOfQueue.row;
+      var col = topOfQueue.col;
+
+      if (row == n - 1 && col == m - 1)
+        return path;
+
+      for (var i = 0; i < rows.length; i++) {
+        var newRow = row + rows[i];
+        var newCol = col + cols[i];
+
+        var key = newRow + ", " + newCol;
+
+        if (newRow >= 0 && newRow < n && newCol >= 0 && newCol < m && grid[newRow][newCol] == 0 && !set.contains(key)) {
+          queue.offer(new Pair(newRow, newCol));
+          set.add(key);
         }
-
-        var map = new HashMap<Integer, Integer>();
-        for (var i = 0; i < n * n; i++)
-            map.put(i, Integer.MAX_VALUE);
-        map.replace(0, 0);
-
-        var set = new HashSet<Integer>();
-        var q = new ArrayDeque<Pair<Integer, Integer>>();
-        q.offer(new Pair<>(0, 0));
-
-        while (!q.isEmpty()) {
-            var frontOfQueue = q.poll().node;
-            set.add(frontOfQueue);
-
-            for (var edge : graph.get(frontOfQueue)) {
-                if (set.contains(edge.node))
-                    continue;
-
-                var newDestination = map.get(frontOfQueue) + edge.weight;
-                if (newDestination < map.get(edge.node)) {
-                    map.put(edge.node, newDestination);
-                    q.offer(new Pair<>(edge.node, newDestination));
-                }
-            }
-        }
-
-        if (map.get(destination).equals(Integer.MAX_VALUE))
-            return -1;
-
-        return map.get(destination) + 1;
+      }
     }
 
-    public int shortestPathBinaryMatrix(int[][] grid) {
-        int n = grid.length;
-        if (n == 1 && grid[0][0] == 1)
-            return -1;
+    path++;
+  }
 
-        return dij(n * n, grid, n * n - 1);
-    }
+  return -1;
+}
 
-    private record Pair<Node, Weight>(Node node, Weight weight) {
-    }
+private record Pair(int row, int col) {
+
+}
 
 }
