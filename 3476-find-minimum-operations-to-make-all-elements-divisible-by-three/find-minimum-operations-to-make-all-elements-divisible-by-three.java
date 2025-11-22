@@ -1,34 +1,12 @@
 class Solution {
     public int minimumOperations(int[] nums) {
-        var minOperation = 0;
+        var sum = 0;
 
-        for (var num : nums)
-            if (num % 3 != 0)
-                minOperation += Math.min(minToLeft(num), minToRight(num));
+        for (var num : nums) {
+            var rem = num % 3;
+            sum += Math.min(rem, 3 - rem);
+        }   
 
-        return minOperation;
+        return sum;
     }
-
-    public int minToLeft(int num) {
-        var cnt = 0;
-
-        while (num % 3 != 0) {
-            num--;
-            cnt++;
-        }
-
-        return cnt;
-    }
-
-    public int minToRight(int num) {
-        var cnt = 0;
-
-        while (num % 3 != 0) {
-            num++;
-            cnt++;
-        }
-
-        return cnt;
-    }
-
 }
