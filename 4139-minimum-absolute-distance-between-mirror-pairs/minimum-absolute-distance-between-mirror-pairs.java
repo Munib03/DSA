@@ -1,32 +1,25 @@
 class Solution {
     public int minMirrorPairDistance(int[] nums) {
         var map = new HashMap<Integer, Integer>();
+        var theAns = Integer.MAX_VALUE;
 
-        var n = nums.length;
-        var res = Integer.MAX_VALUE;
-
-        for (var i = 0; i < n; i++) {
+        for (var i = 0; i < nums.length; i++) {
             var num = nums[i];
 
-            if (map.containsKey(num)) {
-                res = Math.min(res, i - map.get(num));
-            }
+            if (map.containsKey(num))
+                theAns = Math.min(theAns, i - map.get(num));
 
-            map.put(reverse(num), i);
+            map.put(reverseNum(num), i);
         }
 
-        return (res < Integer.MAX_VALUE) ? res : -1;
+        return (theAns == Integer.MAX_VALUE) ? -1 : theAns;
     }
 
-    private int reverse(int a) {
-        var b = 0;
+    private int reverseNum(int num) {
+        var sb = new StringBuilder();
+        sb.append(num);
+        sb.reverse();
 
-        while (a > 0) {
-            b = b * 10 + a % 10;
-            a /= 10;
-        }
-
-        return b;
+        return Integer.parseInt(sb.toString());
     }
-
 }
