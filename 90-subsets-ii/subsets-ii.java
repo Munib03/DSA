@@ -17,7 +17,12 @@ class Solution {
         list.add(nums[index]);
         backtrack(index + 1, nums, list, ansList);
 
+        var nextIndex = index;
+        while (nextIndex < nums.length && nums[index] == nums[nextIndex])
+            nextIndex++;
+
         list.removeLast();
-        backtrack(index + 1, nums, list, ansList);
+        backtrack(nextIndex, nums, list, ansList);
     }
+
 }
