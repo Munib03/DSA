@@ -1,7 +1,6 @@
 class Solution {
     public String reverseWords(String s) {
         var words = s.split(" ");
-        var map = countVowels(words);
 
         var theFirstWordVowels = countVowels(words[0]);
         var sb = new StringBuilder();
@@ -9,9 +8,8 @@ class Solution {
 
         for (var i = 1; i < words.length; i++) {
             var word = words[i];
-            var getCurrVowels = map.get(word);
 
-            if (getCurrVowels == theFirstWordVowels) {
+            if (countVowels(word) == theFirstWordVowels) {
                 var temp = new StringBuilder();
                 temp.append(word);
                 temp.reverse();
@@ -26,18 +24,6 @@ class Solution {
         return sb.toString().trim();
     }
 
-    private Map<String, Integer> countVowels(String[] words) {
-        var map = new HashMap<String, Integer>();
-
-        for (var i = 1; i < words.length; i++) {
-            var word = words[i];
-
-            map.put(word, countVowels(word));
-        }
-
-        return map;
-    }
-
     private int countVowels(String s) {
         var cnt = 0;
 
@@ -47,4 +33,5 @@ class Solution {
 
         return cnt;
     }
+
 }
