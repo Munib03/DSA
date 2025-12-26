@@ -1,16 +1,24 @@
 class Solution {
 public int minCostClimbingStairs(int[] cost) {
-  var n = cost.length;
+  var ans1 = minClimbingStairs(0, cost, new HashMap<>());
+  var ans2 = minClimbingStairs(1, cost, new HashMap<>());
 
-  int[] dp = new int[n + 1];
-  dp[0] = 0;
-  dp[1] = 0;
-
-  for (var i=2; i <= n; i++)
-    dp[i] = Math.min(dp[i-1] + cost[i-1], dp[i-2] + cost[i-2]);
-
-
-  return dp[n];
+  return Math.min(ans1, ans2);
 }
 
+private int minClimbingStairs(int index, int[] costs, Map<Integer, Integer> map) {
+  if (index >= costs.length)
+    return 0;
+
+  else if (map.containsKey(index))
+    return map.get(index);
+
+  var oneStep = costs[index] + minClimbingStairs(index + 1, costs, map);
+  var twoStep = costs[index] + minClimbingStairs(index + 2, costs, map);
+
+  var min = Math.min(oneStep, twoStep);
+  map.put(index, min);
+
+  return min;
+}
 }
