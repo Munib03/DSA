@@ -1,32 +1,29 @@
 class Solution {
-public int coinChange(int[] coins, int amount) {
-  if (amount == 0)
-    return 0;
+    public int coinChange(int[] coins, int amount) {
+        var ans = takeNotTake(0, 0, amount, coins, new HashMap<>());
 
-  int ans = takeNotTake(0, 0, amount, coins, new HashMap<>());
-  return ans >= 1e9 ? -1 : ans;
-}
+        return ans == Integer.MAX_VALUE ? -1 : ans;
+    }
 
-private int takeNotTake(int index, int sum, int target,
-                        int[] nums, Map<String, Integer> map) {
+    private int takeNotTake(int index, int sum, int amount, int[] coins, Map<String, Integer> map) {
+        if (sum == amount)
+            return 0;
 
-  if (sum == target)
-    return 0;
+        else if (sum > amount || index >= coins.length)
+            return Integer.MAX_VALUE;
 
-  if (sum > target || index >= nums.length)
-    return (int) 1e9;
+        var key = index + ", " + sum;
+        if (map.containsKey(key))
+            return map.get(key);
 
-  var key = index + "," + sum;
-  if (map.containsKey(key))
-    return map.get(key);
+        var take = takeNotTake(index, sum + coins[index], amount, coins, map);
+        if (take != Integer.MAX_VALUE)
+            take = take + 1;
 
-  var take = 1 + takeNotTake(index, sum + nums[index], target, nums, map);
+        var notTake = takeNotTake(index + 1, sum, amount, coins, map);
 
-  var notTake = takeNotTake(index + 1, sum, target, nums, map);
+        map.put(key, Math.min(take, notTake));
 
-  var res = Math.min(take, notTake);
-  map.put(key, res);
-
-  return res;
-}
+        return Math.min(take, notTake);
+    }
 }
