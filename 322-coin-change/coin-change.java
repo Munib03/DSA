@@ -5,25 +5,26 @@ class Solution {
         return ans == Integer.MAX_VALUE ? -1 : ans;
     }
 
-    private int takeNotTake(int index, int sum, int amount, int[] coins, Map<String, Integer> map) {
-        if (sum == amount)
+    private int takeNotTake(int index, int sum, int target, int[] coins, Map<String, Integer> map) {
+        if (sum == target)
             return 0;
 
-        else if (sum > amount || index >= coins.length)
+        else if (sum > target || index == coins.length)
             return Integer.MAX_VALUE;
 
         var key = index + ", " + sum;
         if (map.containsKey(key))
             return map.get(key);
 
-        var take = takeNotTake(index, sum + coins[index], amount, coins, map);
+        var take = takeNotTake(index, sum + coins[index], target, coins, map);
         if (take != Integer.MAX_VALUE)
-            take = take + 1;
+            take += 1;
 
-        var notTake = takeNotTake(index + 1, sum, amount, coins, map);
+        var notTake = takeNotTake(index + 1, sum, target, coins, map);
 
-        map.put(key, Math.min(take, notTake));
+        var min = Math.min(take, notTake);
+        map.put(key, min);
 
-        return Math.min(take, notTake);
+        return min;
     }
 }
