@@ -1,31 +1,46 @@
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
 class Solution {
-    private long totalSum = 0;
-    private long maxProduct = 0;
-    private static final int MOD = 1_000_000_007;
-
     public int maxProduct(TreeNode root) {
-        totalSum = getTotalSum(root);
-        computeSubtreeSum(root);
-        return (int) (maxProduct % MOD);
+        var mod = 1_000_000_007;
+        var list = new ArrayList<Long>();
+
+        getTotalSum(root, list);
+
+        var totalSum = list.getLast();
+        var maxAns = 0L;
+
+        for (var sth : list) {
+            var tempSum = (totalSum - sth) * sth;
+            maxAns = Math.max(maxAns, tempSum);
+        }
+
+        return (int) (maxAns % mod);
     }
 
-    private long getTotalSum(TreeNode node) {
-        if (node == null)
-            return 0;
-        return node.val + getTotalSum(node.left) + getTotalSum(node.right);
-    }
-
-    private long computeSubtreeSum(TreeNode node) {
-        if (node == null)
+    private long getTotalSum(TreeNode root, List<Long> list) {
+        if (root == null)
             return 0;
 
-        long left = computeSubtreeSum(node.left);
-        long right = computeSubtreeSum(node.right);
-        long subSum = node.val + left + right;
+        var left = getTotalSum(root.left, list);
+        var right = getTotalSum(root.right, list);
 
-        long product = subSum * (totalSum - subSum);
-        maxProduct = Math.max(maxProduct, product);
+        var currSubTreeSum = left + right + root.val;
+        list.add(currSubTreeSum);
 
-        return subSum;
+        return currSubTreeSum;
     }
 }
