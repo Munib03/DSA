@@ -10,30 +10,29 @@ class Solution {
         return matchNotMatch(0, 0, word1, word2, dp);
     }
 
-    private int matchNotMatch(int index1, int index2, String s1, String s2, int[][] dp) {
-        if (index1 == s1.length())
-            return s2.length() - index2;
+    private int matchNotMatch(int i, int j, String s1, String s2, int[][] dp) {
+        if (i == s1.length())
+            return s2.length() - j;
 
-        else if (index2 == s2.length())
-            return s1.length() - index1;
+        else if (j == s2.length())
+            return s1.length() - i;
 
-        else if (dp[index1][index2] != -1)
-            return dp[index1][index2];
+        else if (dp[i][j] != -1)
+            return dp[i][j];
 
-        var me = s1.charAt(index1);
-        var ou = s2.charAt(index2);
+        var x = s1.charAt(i);
+        var y = s2.charAt(j);
 
-        if (me == ou)
-            dp[index1][index2] = matchNotMatch(index1 + 1, index2 + 1, s1, s2, dp);
-
+        if (x == y)
+            dp[i][j] = matchNotMatch(i + 1, j + 1, s1, s2, dp);
         else {
-            var deleteA = 1 + matchNotMatch(index1 + 1, index2, s1, s2, dp);
-            var deleteB = 1 + matchNotMatch(index1, index2 + 1, s1, s2, dp);
+            var a = 1 + matchNotMatch(i + 1, j, s1, s2, dp);
+            var b = 1 + matchNotMatch(i, j + 1, s1, s2, dp);
 
-            var min = Math.min(deleteA, deleteB);
-            dp[index1][index2] = min;
+            var best = Math.min(a, b);
+            dp[i][j] = best;
         }
 
-        return dp[index1][index2];
+        return dp[i][j];
     }
 }
