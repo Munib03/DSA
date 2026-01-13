@@ -16,11 +16,12 @@ class Solution {
         else if (dp[index][prev + 1] != -1)
             return dp[index][prev + 1];
 
-        var skip = matchNotMatch(index + 1, prev, nums, dp);
         var take = 0;
 
         if (prev == -1 || nums[index] > nums[prev])
             take = 1 + matchNotMatch(index + 1, index, nums, dp);
+
+        var skip = matchNotMatch(index + 1, prev, nums, dp);
 
         var max = Math.max(skip, take);
         dp[index][prev + 1] = max;
