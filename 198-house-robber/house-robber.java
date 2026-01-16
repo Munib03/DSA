@@ -1,29 +1,26 @@
 class Solution {
-    public int rob(int[] nums) {
-        pickNotPick(0, 0, nums, new HashMap<>());
+public int rob(int[] nums) {
+  var n = nums.length;
 
-        return maxProfit;
-    }
+  int[] dp = new int[n + 1];
+  Arrays.fill(dp, -1);
 
-    private int maxProfit = 0;
+  return takeNotTake(0, nums, dp);
+}
 
-    private void pickNotPick(int index, int currSum, int[] nums, Map<String, Integer> memoMap) {
-        var key = index + ", " + currSum;
-        if (index >= nums.length) {
-            maxProfit = Math.max(maxProfit, currSum);
-            return;
-        }
+private int takeNotTake(int index, int[] nums, int[] dp) {
+  if (index >= nums.length)
+    return 0;
 
-        else if (memoMap.containsKey(key))
-            return;
+  else if (dp[index] != -1)
+    return dp[index];
 
-        currSum += nums[index];
-        pickNotPick(index + 2, currSum, nums, memoMap);
+  var pick = nums[index] + takeNotTake(index + 2, nums, dp);
+  var notPick = takeNotTake(index + 1, nums, dp);
 
-        currSum -= nums[index];
-        pickNotPick(index + 1, currSum, nums, memoMap);
+  var max = Math.max(pick, notPick);
+  dp[index] = max;
 
-        memoMap.put(key, currSum);
-    }
-
+  return dp[index];
+}
 }
