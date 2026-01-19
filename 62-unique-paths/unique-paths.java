@@ -1,24 +1,29 @@
 class Solution {
     public int uniquePaths(int m, int n) {
-        return rec(m, n, 0, 0, new HashMap<>());
+        int[][] dp = new int[m + 1][n + 1];
+        for (var sth : dp)
+            Arrays.fill(sth, -1);
+
+        return dfs(0, 0, m, n, dp);
     }
 
-    private int rec(int m, int n, int row, int col, Map<String, Integer> map) {
-        if (row >= m || col >= n)
+    private int dfs(int i, int j, int m, int n, int[][] dp) {
+        if (i > m || j > n)
             return 0;
 
-        else if (row == m - 1 && col == n - 1)
+        else if (i == m - 1 && j == n - 1)
             return 1;
 
-        var key = row + ", " + col;
-        if (map.containsKey(key))
-            return map.get(key);
+        else if (dp[i][j] != -1)
+            return dp[i][j];
 
-        var down = rec(m, n, row + 1, col, map);
-        var right = rec(m, n, row, col + 1, map);
+        var up = dfs(i + 1, j, m, n, dp);
+        var right = dfs(i, j + 1, m, n, dp);
 
-        map.put(key, down + right);
+        var sum = up + right;
+        dp[i][j] = sum;
 
-        return map.get(key);
+        return dp[i][j];
     }
+
 }
