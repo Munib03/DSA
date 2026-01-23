@@ -1,30 +1,38 @@
 class Solution {
     public int coinChange(int[] coins, int amount) {
-        var ans = takeNotTake(0, 0, amount, coins, new HashMap<>());
+        int n = coins.length;
+        if (amount == 0)
+            return 0;
 
+        int[][] dp = new int[n][amount + 1];
+        for (int[] row : dp)
+            Arrays.fill(row, -1);
+
+        int ans = pickNotPick(0, 0, coins, amount, dp);
         return ans == Integer.MAX_VALUE ? -1 : ans;
     }
 
-    private int takeNotTake(int index, int sum, int target, int[] coins, Map<String, Integer> map) {
-        if (sum == target)
+    private int pickNotPick(int index, int currSum, int[] nums,
+                            int target, int[][] dp) {
+
+        if (currSum == target)
             return 0;
 
-        else if (sum > target || index == coins.length)
+        if (index >= nums.length || currSum > target)
             return Integer.MAX_VALUE;
 
-        var key = index + ", " + sum;
-        if (map.containsKey(key))
-            return map.get(key);
+        if (dp[index][currSum] != -1)
+            return dp[index][currSum];
 
-        var take = takeNotTake(index, sum + coins[index], target, coins, map);
-        if (take != Integer.MAX_VALUE)
-            take += 1;
+        int pick = Integer.MAX_VALUE;
+        if (nums[index] <= target - currSum) {
+            pick = pickNotPick(index, currSum + nums[index], nums, target, dp);
+            if (pick != Integer.MAX_VALUE)
+                pick += 1;
+        }
 
-        var notTake = takeNotTake(index + 1, sum, target, coins, map);
+        int notPick = pickNotPick(index + 1, currSum, nums, target, dp);
 
-        var min = Math.min(take, notTake);
-        map.put(key, min);
-
-        return min;
+        return dp[index][currSum] = Math.min(pick, notPick);
     }
 }
