@@ -1,28 +1,33 @@
 class Solution {
     public int change(int amount, int[] coins) {
-        return takeNotTake(0, 0, amount, coins, new HashMap<>());
+        var n = coins.length;
+
+        int[][] dp = new int[n][amount + 1];
+        for (var sth : dp)
+            Arrays.fill(sth, -1);
+
+        return takeNotTake(0, 0, coins, amount, dp);
     }
 
-    private int takeNotTake(int index, int sum, int amount, int[] coins, Map<String, Integer> memo) {
-        if (sum == amount)
-            return 1;
-
-        else if (sum > amount || index >= coins.length)
+    private int takeNotTake(int index, int currSum, int[] nums, int target, int[][] dp) {
+        if (index >= nums.length || currSum > target)
             return 0;
 
-        var key = index + ", " + sum;
-        if (memo.containsKey(key))
-            return memo.get(key);
+        else if (currSum == target)
+            return 1;
 
-        sum += coins[index];
-        var take = takeNotTake(index, sum, amount, coins, memo);
+        else if (dp[index][currSum] != -1)
+            return dp[index][currSum];
 
-        sum -= coins[index];
-        var notTake = takeNotTake(index + 1, sum, amount, coins, memo);
+        currSum += nums[index];
+        var pick = takeNotTake(index, currSum, nums, target, dp);
 
-        var totalWays = take + notTake;
-        memo.put(key, totalWays);
+        currSum -= nums[index];
+        var notPick = takeNotTake(index + 1, currSum, nums, target, dp);
 
-        return totalWays;
+        var sum = pick + notPick;
+        dp[index][currSum] = sum;
+
+        return sum;
     }
 }
