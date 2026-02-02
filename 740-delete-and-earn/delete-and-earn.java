@@ -1,30 +1,34 @@
 class Solution {
-    public int deleteAndEarn(int[] nums) {
-        int max = 0;
-        for (int x : nums)
-            max = Math.max(max, x);
+public int deleteAndEarn(int[] nums) {
+  var max = Integer.MIN_VALUE;
+  for (var num: nums)
+    max = Math.max(max, num);
 
-        int[] points = new int[max + 1];
-        for (int x : nums)
-            points[x] += x;
+  int[] points = new int[max + 1];
+  for (var num: nums)
+    points[num] += num;
 
-        return pickNotPick(0, points, new HashMap<>());
-    }
+  var n = points.length;
 
-    private int pickNotPick(int i, int[] points, Map<Integer, Integer> memo) {
-        if (i >= points.length)
-            return 0;
+  int[] dp = new int[n];
+  Arrays.fill(dp, -1);
 
-        if (memo.containsKey(i))
-            return memo.get(i);
+  return takeNotTake(0, points, dp);
+}
 
-        int pick = points[i] + pickNotPick(i + 2, points, memo);
-        int notPick = pickNotPick(i + 1, points, memo);
+private int takeNotTake(int index, int[] nums, int[] dp) {
+  if (index >= nums.length)
+    return 0;
 
-        int ans = Math.max(pick, notPick);
-        memo.put(i, ans);
+  else if (dp[index] != -1)
+    return dp[index];
 
-        return ans;
-    }
+  var take = nums[index] + takeNotTake(index + 2, nums, dp);
+  var notTake = takeNotTake(index + 1, nums, dp);
 
+  var max = Math.max(take, notTake);
+  dp[index] = max;
+
+  return dp[index];
+}
 }
