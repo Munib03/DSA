@@ -15,12 +15,13 @@ private int takeNotTake(int index, int[] nums, int[] dp) {
   else if (dp[index] != -1)
     return dp[index];
 
-  var pick = nums[index] + takeNotTake(index + 2, nums, dp);
-  var notPick = takeNotTake(index + 1, nums, dp);
+  var take = nums[index] + takeNotTake(index + 2, nums, dp);
+  var notTake = takeNotTake(index + 1, nums, dp);
 
-  var max = Math.max(pick, notPick);
+  var max = Math.max(take, notTake);
   dp[index] = max;
 
   return dp[index];
 }
+
 }
