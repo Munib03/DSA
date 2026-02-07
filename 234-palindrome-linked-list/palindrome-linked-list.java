@@ -1,24 +1,50 @@
 class Solution {
     public boolean isPalindrome(ListNode head) {
-        var stack = new Stack<Integer>();
+        var mid = midOfLL(head);
+        var headOfNewLL = reverseLinkedList(mid);
 
-        var current = head;
-        while (current != null) {
-            stack.push(current.val);
-            current = current.next;
-        }
+        var left = head;
+        var right = headOfNewLL;
 
-        current = head;
-        while (!stack.isEmpty()) {
-            var top = stack.pop();
-            var val = current.val;
+        while (right != null) {
+            var val1 = left.val;
+            var val2 = right.val;
 
-            if (top != val)
+            if (val1 != val2)
                 return false;
 
-            current = current.next;
+            left = left.next;
+            right = right.next;
         }
 
         return true;
+    }
+
+    private ListNode midOfLL(ListNode head) {
+        var slowPointer = head;
+        var fastPointer = head;
+
+        while (fastPointer != null && fastPointer.next != null) {
+            slowPointer = slowPointer.next;
+            fastPointer = fastPointer.next.next;
+        }
+
+        return slowPointer;
+    }
+
+    private ListNode reverseLinkedList(ListNode node) {
+        ListNode prev = null;
+        ListNode curr = node;
+
+        while (curr != null) {
+            var next = curr.next;
+
+            curr.next = prev;
+
+            prev = curr;
+            curr = next;
+        }
+
+        return prev;
     }
 }
