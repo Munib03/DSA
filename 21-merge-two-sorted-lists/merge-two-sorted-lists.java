@@ -10,38 +10,33 @@
  */
 class Solution {
     public ListNode mergeTwoLists(ListNode list1, ListNode list2) {
-        if (list1 == null && list2 == null)
-            return null;
-        else if (list1 == null)
-            return list2;
-        else if (list2 == null)
-            return list1;
+        var p1 = list1;
+        var p2 = list2;
 
-        var temp1 = list1;
-        var temp2 = list2;
+        var newHead = new ListNode(0);
+        var temp = newHead;
 
-        var nums = new ArrayList<Integer>();
+        while (p1 != null && p2 != null) {
+            var val1 = p1.val;
+            var val2 = p2.val;
 
-        while (temp1 != null) {
-            nums.add(temp1.val);
-            temp1 = temp1.next;
+            if (val1 <= val2) {
+                temp.next = p1;
+                p1 = p1.next;
+            }
+            else {
+                temp.next = p2;
+                p2 = p2.next;
+            }
+
+            temp = temp.next;
         }
 
-        while (temp2 != null) {
-            nums.add(temp2.val);
-            temp2 = temp2.next;
-        }
+        if (p1 != null)
+            temp.next = p1;
+        else if (p2 != null)
+            temp.next = p2;
 
-        Collections.sort(nums);
-
-        ListNode head = new ListNode(nums.getFirst());
-        var tempHead = head;
-
-        for (var i = 1; i < nums.size(); i++) {
-            head.next = new ListNode(nums.get(i));
-            head = head.next;
-        }
-
-        return tempHead;
+        return newHead.next;
     }
 }
