@@ -13,24 +13,55 @@ class Solution {
         if (head == null || head.next == null)
             return head;
 
-        var list = new ArrayList<Integer>();
-        var current = head;
+        var middNode = midOfLL(head);
 
-        while (current != null) {
-            list.add(current.val);
-            current = current.next;
+        var rightHalf = middNode.next;
+        middNode.next = null;
+
+        var leftSorted = sortList(head);
+        var rightSorted = sortList(rightHalf);
+
+        return merge(leftSorted, rightSorted);        
+    }
+
+    private ListNode midOfLL(ListNode head) {
+        var slow = head;
+        var fast = head.next;
+
+        while (fast != null && fast.next != null) {
+            slow = slow.next;
+            fast = fast.next.next;
         }
 
-        Collections.sort(list);
+        return slow;
+    }
 
-        var newHead = new ListNode(list.getFirst());
-        var tail = newHead;
+    private ListNode merge(ListNode left, ListNode right) {
+        var dummy = new ListNode(0);
+        var tail = dummy;
 
-        for (var i=1; i < list.size(); i++) {
-            tail.next = new ListNode(list.get(i));
+        while (left != null && right != null) {
+            var val1 = left.val;
+            var val2 = right.val;
+
+            if (val1 <= val2) {
+                tail.next = left;
+                left = left.next;
+            }
+            else {
+                tail.next = right;
+                right = right.next;
+            }
+
             tail = tail.next;
         }
 
-        return newHead;
+        if (left != null)
+            tail.next = left;
+
+        else if (right != null)
+            tail.next = right;
+
+        return dummy.next;
     }
 }
