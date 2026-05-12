@@ -14,7 +14,6 @@ public void wiggleSort(int[] nums) {
   for (; i >= 0; i--, index += 2)
     ansArr[index] = nums[i];
 
-  for (var f=0; f < n; f++)
-    nums[f] = ansArr[f];
+  System.arraycopy(ansArr, 0, nums, 0, n);
 }
 }
