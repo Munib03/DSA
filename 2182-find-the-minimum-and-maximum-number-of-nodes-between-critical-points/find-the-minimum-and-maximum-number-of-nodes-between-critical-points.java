@@ -31,7 +31,6 @@ class Solution {
             index++;
         }
 
-        Collections.sort(list);
         if (list.size() < 2)
             return new int[] { -1, -1};
 
