@@ -1,22 +1,22 @@
 class Solution {
     public List<List<Integer>> subsets(int[] nums) {
-        backtrack(0, nums, new ArrayList<>());
+        Set<List<Integer>> set = new HashSet<>();
 
-        return ansList;
+        subset(0, nums, set, new ArrayList<>());
+
+        return new ArrayList<>(set);
     }
 
-    private final List<List<Integer>> ansList = new ArrayList<>();
-
-    private void backtrack(int index, int[] nums, List<Integer> list) {
+    public void subset(int index, int[] nums, Set<List<Integer>> set, List<Integer> list) {
         if (index >= nums.length) {
-            ansList.add(new ArrayList<>(list));
+            set.add(new ArrayList<>(list));
             return;
         }
 
         list.add(nums[index]);
-        backtrack(index + 1, nums, list);
+        subset(index + 1, nums, set, list);
 
         list.removeLast();
-        backtrack(index + 1, nums, list);
+        subset(index + 1, nums, set, list);
     }
 }
