@@ -1,28 +1,32 @@
 class Solution {
     public List<List<Integer>> permute(int[] nums) {
-        rec(nums, new ArrayList<>(), new HashSet<>());
+        List<List<Integer>> ansList = new ArrayList<>();
+
+        permutation(nums, ansList, new ArrayList<>(), new HashSet<>());
 
         return ansList;
     }
 
-    private final List<List<Integer>> ansList = new ArrayList<>();
-
-    private void rec(int[] nums, List<Integer> list, Set<Integer> set) {
-        if (list.size() >= nums.length) {
+    public void permutation(int[] nums, List<List<Integer>> ansList,
+            List<Integer> list, Set<Integer> set) {
+        if (list.size() == nums.length) {
             ansList.add(new ArrayList<>(list));
             return;
         }
 
         for (var i = 0; i < nums.length; i++) {
-            if (!set.contains(i)) {
-                set.add(i);
-                list.add(nums[i]);
+            var num = nums[i];
 
-                rec(nums, list, set);
+            if (set.contains(i))
+                continue;
 
-                list.removeLast();
-                set.remove(i);
-            }
+            set.add(i);
+            list.add(num);
+
+            permutation(nums, ansList, list, set);
+
+            set.remove(i);
+            list.removeLast();
         }
     }
 }
