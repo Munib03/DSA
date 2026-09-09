@@ -7,22 +7,23 @@ class Solution {
         return ansList;
     }
 
-    private void backtrack(int num, int target, int k, int sum,
+    private void backtrack(int num, int n, int k, int sum,
             List<Integer> list, List<List<Integer>> ansList) {
-        if (list.size() == k && sum == target) {
-            ansList.add(new ArrayList<>(list));
+
+        if (sum > n || list.size() > k || num >= 10) {
+            if (sum == n && list.size() == k) {
+                ansList.add(new ArrayList<>(list));
+            }
+
             return;
         }
 
-        if (num >= 10 || sum > target)
-            return;
-
         sum += num;
         list.add(num);
-        backtrack(num + 1, target, k, sum, list, ansList);
+        backtrack(num + 1, n, k, sum, list, ansList);
 
         sum -= num;
         list.removeLast();
-        backtrack(num + 1, target, k, sum, list, ansList);
+        backtrack(num + 1, n, k, sum, list, ansList);
     }
 }
