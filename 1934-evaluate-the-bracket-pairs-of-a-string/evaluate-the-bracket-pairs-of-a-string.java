@@ -7,9 +7,10 @@ class Solution {
         var key = new StringBuilder();
 
         for (var ch : s.toCharArray()) {
-            if (ch == '(') {
+            if (ch == '(') 
                 flag = true;
-            } else if (ch == ')') {
+            
+            else if (ch == ')') {
                 if (map.containsKey(key.toString()))
                     sb.append(map.get(new String(key)));
                 else
@@ -17,9 +18,10 @@ class Solution {
 
                 flag = false;
                 key = new StringBuilder();
-            } else if (flag) {
+            } 
+            else if (flag) 
                 key.append(ch);
-            } else
+            else
                 sb.append(ch);
         }
 
