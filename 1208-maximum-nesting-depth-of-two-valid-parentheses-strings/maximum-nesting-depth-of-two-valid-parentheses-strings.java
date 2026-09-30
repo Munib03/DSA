@@ -4,24 +4,24 @@ class Solution {
         int[] ans = new int[n];
         var index = 0;
 
-        var stack1 = new Stack<Character>();
-        var stack2 = new Stack<Character>();
+        var cnt1 = 0;
+        var cnt2 = 0;
 
         for (var ch : seq.toCharArray()) {
             if (ch == '(') {
-                if (stack1.isEmpty() || stack1.size() < stack2.size()) {
-                    stack1.push(ch);
+                if (cnt1 == 0 || cnt1 < cnt2) {
+                    cnt1++;
                     ans[index++] = 0;
                 } else {
-                    stack2.push(ch);
+                    cnt2++;
                     ans[index++] = 1;
                 }
             } else if (ch == ')') {
-                if (!stack1.isEmpty()) {
-                    stack1.pop();
+                if (cnt1 > 0) {
+                    cnt1--;
                     ans[index++] = 0;
-                } else if (!stack2.isEmpty()) {
-                    stack2.pop();
+                } else if (cnt2 > 0) {
+                    cnt2--;
                     ans[index++] = 1;
                 }
             }
