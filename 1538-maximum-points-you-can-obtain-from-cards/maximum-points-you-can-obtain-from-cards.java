@@ -1,24 +1,28 @@
 class Solution {
-    public int maxScore(int[] cardPoints, int k) {
-        var n = cardPoints.length;
+public int maxScore(int[] cardPoints, int k) {
+  var n = cardPoints.length;
 
-        var leftSum = 0;
-        var rightSum = 0;
+  var leftSum = 0;
+  var rightSum = 0;
 
-        for (var i = 0; i < k; i++)
-            leftSum += cardPoints[i];
+  for (var i=0; i < k; i++)
+    leftSum += cardPoints[i];
 
-        var max = leftSum;
+  var max = leftSum;
+  var l = k - 1;
+  var r = n - 1;
 
-        var lastIndex = n - 1;
-        for (var i = k - 1; i >= 0; i--) {
-            leftSum -= cardPoints[i];
-            rightSum += cardPoints[lastIndex--];
+  while (l >= 0) {
+    leftSum -= cardPoints[l];
+    rightSum += cardPoints[r];
 
-            var currSum = leftSum + rightSum;
-            max = Math.max(max, currSum);
-        }
+    var sum = leftSum + rightSum;
+    max = Math.max(max, sum);
 
-        return max;
-    }
+    l--;
+    r--;
+  }
+
+  return max;
+}
 }
